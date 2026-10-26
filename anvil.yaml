@@ -356,7 +356,7 @@ metadata: {title: MonShop, description: 'The shops on your street, open. See wha
 name: MonShop
 native_deps:
   head_html: |-
-    <script src="_/theme/legal-kit.js?v=51e2bcd1cf"></script>
+    <script src="_/theme/legal-kit.js?v=c108a23fa8"></script>
     <meta name="description" content="MonShop: see what the independent shops, cafés and restaurants around you have today. Bookmark a place, get 5% off.">
     <meta name="theme-color" content="#FFF8EF">
     <meta name="referrer" content="strict-origin-when-cross-origin">
