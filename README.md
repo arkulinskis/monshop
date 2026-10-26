@@ -1,88 +1,56 @@
-# About This [Anvil](https://anvil.works/?utm_source=github:app_README) App
+# MonShop · your street, open
 
-### Build web apps with nothing but Python.
+MonShop is a two-sided neighbourhood app built on [Anvil](https://anvil.works).
 
-The app in this repository is built with [Anvil](https://anvil.works?utm_source=github:app_README), the framework for building web apps with nothing but Python. You can clone this app into your own Anvil account to use and modify.
+- **Shoppers** look around a map of the independent shops, cafés and restaurants near them, see today's specials
+  and photos of what's actually on the shelves, and **bookmark** places. Every bookmark is a membership: show the
+  live pass at the counter and get **5% off**.
+- **Shopkeepers** open their place in two minutes (name, type, "I'm here" or address + draggable pin), then post by
+  tapping one giant **Snap & post** button. The phone camera opens, the photo is shrunk on the phone, price is
+  optional. Each place keeps a **top 20** shelf: posting a 21st thing retires the oldest unpinned post.
+- **Admins** switch auto-approval on or off separately for **shops** and **restaurants**, review the approval queue,
+  handle reported posts, and answer the **Shopkeepers' Council**, where shopkeepers suggest and vote on features.
 
-Below, you will find:
-- [How to open this app](#opening-this-app-in-anvil-and-getting-it-online) in Anvil and deploy it online
-- Information [about Anvil](#about-anvil)
-- And links to some handy [documentation and tutorials](#tutorials-and-documentation)
+## Opening it in Anvil
 
-## Opening this app in Anvil and getting it online
+This repo is the Anvil app itself. In the Anvil editor, pull the latest commit from GitHub (or "Clone from GitHub"
+with this repo's URL). If Anvil asks to update the database schema, accept it: the tables are defined in
+`anvil.yaml` (and `auto_create_missing_columns` is on as a safety net).
 
-### Cloning the app
+The first time anyone opens the map, a **demo street in Old Riga** (13 live places, 2 waiting for approval, a few
+Council ideas) is created so the app never looks empty. Remove it any time from **Admin → Demo data**.
 
-Go to the [Anvil Editor](https://anvil.works/build?utm_source=github:app_README) (you might need to sign up for a free account) and click on “Clone from GitHub” (underneath the “Blank App” option):
+**Admin access:** the account that signs up with `arkulinskis@gmail.com` is an admin automatically
+(`ADMIN_EMAILS` in `server_code/common.py`).
 
-<img src="https://anvil.works/docs/version-control/img/git/clone-from-github.png" alt="Clone from GitHub"/>
+## How the 5% works
 
-Enter the URL of this GitHub repository. If you're not yet logged in, choose "GitHub credentials" as the authentication method and click "Connect to GitHub".
+1. A shopper bookmarks a place (they need a free account).
+2. At the counter they open their **live pass**: moving stripes and a ticking clock, so a screenshot doesn't pass.
+3. The pass shows **today's word** (e.g. 🦒 GIRAFFE). The shopkeeper sees the same word on their dashboard. It
+   changes every day and differs per place. Each day's first pass show counts as a visit in the shop's stats.
 
-<img src="https://anvil.works/docs/version-control/img/git/clone-app-from-git.png" alt="Clone App from Git modal"/>
+## Search
 
-Finally, click "Clone App".
+The map search runs in the browser (`theme/assets/monshop.js`) over the shops in view and everything on their
+shelves. It ignores accents (`maiznica` finds Maiznīca), tolerates typos (`sourdugh`), and supports wildcards:
+`*` for any run of letters (`ceram*`) and `?` for exactly one (`b?gel`).
 
-This app will then be in your Anvil account, ready for you to run it or start editing it! **Any changes you make will be automatically pushed back to this repository, if you have permission!** You might want to [make a new branch](https://anvil.works/docs/version-control?utm_source=github:app_README).
+## Where things live
 
-### Running the app yourself:
+| Path | What |
+| --- | --- |
+| `client_code/Main` | App shell, header, mobile tab bar and the `#hash` router |
+| `client_code/Landing` + `landing_content.py` | Landing page with two doors: shoppers and shopkeepers |
+| `client_code/MapPage` | Map + search + filters + result list |
+| `client_code/Fresh` | Newest posts nearby |
+| `client_code/ShopPage` | A place as shoppers see it; bookmark / pass |
+| `client_code/Saved` | Bookmarked places and their passes |
+| `client_code/Onboard`, `Sell`, `ShopSettings` | Open a place, the shopkeeper dashboard, shop details |
+| `client_code/Council` | The Shopkeepers' Council |
+| `client_code/Admin` | Auto-approve switches, approval queue, places, reports, Council replies, demo data |
+| `server_code/` | `api_public` (map, feed, geocoding), `api_shopper`, `api_seller`, `api_council`, `api_admin`, `seed` |
+| `theme/assets/` | `theme.css`, `monshop.js`, `logo.svg`, favicons, `spinner.svg` (embedded in the CSS) |
 
-Find the **Run** button at the top-right of the Anvil editor:
-
-<img src="https://anvil.works/docs/img/run-button-new-ide.png"/>
-
-
-### Publishing the app on your own URL
-
-Now you've cloned the app, you can [deploy it on the internet with two clicks](https://anvil.works/docs/deployment/quickstart?utm_source=github:app_README)! Find the **Publish** button at the top-right of the editor:
-
-<img src="https://anvil.works/docs/deployment/img/environments/publish-button.png"/>
-
-When you click it, you will see the Publish dialog:
-
-<img src="https://anvil.works/docs/deployment/img/quickstart/empty-environments-dialog.png"/>
-
-Click **Publish This App**, and you will see that your app has been deployed at a new, public URL:
-
-<img src="https://anvil.works/docs/deployment/img/quickstart/default-public-environment.png"/>
-
-That's it - **your app is now online**. Click the link and try it!
-
-## About Anvil
-
-If you’re new to Anvil, welcome! Anvil is a platform for building full-stack web apps with nothing but Python. No need to wrestle with JS, HTML, CSS, Python, SQL and all their frameworks – just build it all in Python.
-
-<figure>
-<figcaption><h3>Learn About Anvil In 80 Seconds👇</h3></figcaption>
-<a href="https://www.youtube.com/watch?v=3V-3g1mQ5GY" target="_blank">
-<img
-  src="https://anvil-website-static.s3.eu-west-2.amazonaws.com/anvil-in-80-seconds-YouTube.png"
-  alt="Anvil In 80 Seconds"
-/>
-</a>
-</figure>
-<br><br>
-
-[![Try Anvil Free](https://anvil-website-static.s3.eu-west-2.amazonaws.com/mark-complete.png)](https://anvil.works?utm_source=github:app_README)
-
-To learn more about Anvil, visit [https://anvil.works](https://anvil.works?utm_source=github:app_README).
-
-## Tutorials and documentation
-
-### Tutorials
-
-If you are just starting out with Anvil, why not **[try the 10-minute Feedback Form tutorial](https://anvil.works/learn/tutorials/feedback-form?utm_source=github:app_README)**? It features step-by-step tutorials that will introduce you to the most important parts of Anvil.
-
-Anvil has tutorials on:
-- [Building Dashboards](https://anvil.works/learn/tutorials/data-science#dashboarding?utm_source=github:app_README)
-- [Multi-User Applications](https://anvil.works/learn/tutorials/multi-user-apps?utm_source=github:app_README)
-- [Building Web Apps with an External Database](https://anvil.works/learn/tutorials/external-database?utm_source=github:app_README)
-- [Deploying Machine Learning Models](https://anvil.works/learn/tutorials/deploy-machine-learning-model?utm_source=github:app_README)
-- [Taking Payments with Stripe](https://anvil.works/learn/tutorials/stripe?utm_source=github:app_README)
-- And [much more....](https://anvil.works/learn/tutorials?utm_source=github:app_README)
-
-### Reference Documentation
-
-The Anvil reference documentation provides comprehensive information on how to use Anvil to build web applications. You can find the documentation [here](https://anvil.works/docs/overview?utm_source=github:app_README).
-
-If you want to get to the basics as quickly as possible, each section of this documentation features a [Quick-Start Guide](https://anvil.works/docs/overview/quickstarts?utm_source=github:app_README).
+Maps use OpenStreetMap tiles via Leaflet; addresses are looked up with OpenStreetMap Nominatim from the server.
+New pending places email the admin, and approvals and rejections email the owner, through Anvil's email service.

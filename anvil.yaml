@@ -31,11 +31,331 @@ db_schema:
       client_hidden: true
       name: signed_up
       type: datetime
+    - admin_ui: {order: 7, width: 200}
+      client_hidden: true
+      name: remembered_logins
+      type: simpleObject
+    - admin_ui: {order: 8, width: 200}
+      client_hidden: true
+      name: email_confirmation_key
+      type: string
+    - admin_ui: {order: 9, width: 200}
+      client_hidden: false
+      name: display_name
+      type: string
+    - admin_ui: {order: 10, width: 200}
+      client_hidden: false
+      name: is_admin
+      type: bool
     indexes: []
     server: full
     title: Users
-metadata: {title: MonShop}
+  places:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: owner
+      target: users
+      type: link_single
+    - admin_ui: {order: 1, width: 200}
+      name: name
+      type: string
+    - admin_ui: {order: 2, width: 200}
+      name: kind
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: category
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: emoji
+      type: string
+    - admin_ui: {order: 5, width: 200}
+      name: color
+      type: string
+    - admin_ui: {order: 6, width: 200}
+      name: tagline
+      type: string
+    - admin_ui: {order: 7, width: 200}
+      name: about
+      type: string
+    - admin_ui: {order: 8, width: 200}
+      name: address
+      type: string
+    - admin_ui: {order: 9, width: 200}
+      name: lat
+      type: number
+    - admin_ui: {order: 10, width: 200}
+      name: lng
+      type: number
+    - admin_ui: {order: 11, width: 200}
+      name: hours
+      type: string
+    - admin_ui: {order: 12, width: 200}
+      name: phone
+      type: string
+    - admin_ui: {order: 13, width: 200}
+      name: website
+      type: string
+    - admin_ui: {order: 14, width: 200}
+      name: currency
+      type: string
+    - admin_ui: {order: 15, width: 200}
+      name: cover
+      type: media
+    - admin_ui: {order: 16, width: 200}
+      name: status
+      type: string
+    - admin_ui: {order: 17, width: 200}
+      name: reject_reason
+      type: string
+    - admin_ui: {order: 18, width: 200}
+      name: created
+      type: datetime
+    - admin_ui: {order: 19, width: 200}
+      name: updated
+      type: datetime
+    - admin_ui: {order: 20, width: 200}
+      name: reviewed_at
+      type: datetime
+    - admin_ui: {order: 21, width: 200}
+      name: reviewed_by
+      target: users
+      type: link_single
+    - admin_ui: {order: 22, width: 200}
+      name: special
+      type: string
+    - admin_ui: {order: 23, width: 200}
+      name: special_until
+      type: datetime
+    - admin_ui: {order: 24, width: 200}
+      name: views
+      type: number
+    - admin_ui: {order: 25, width: 200}
+      name: bookmarks
+      type: number
+    - admin_ui: {order: 26, width: 200}
+      name: passes_shown
+      type: number
+    - admin_ui: {order: 27, width: 200}
+      name: last_post
+      type: datetime
+    - admin_ui: {order: 28, width: 200}
+      name: search_text
+      type: string
+    - admin_ui: {order: 29, width: 200}
+      name: is_demo
+      type: bool
+    indexes: []
+    server: full
+    title: Places
+  items:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: place
+      target: places
+      type: link_single
+    - admin_ui: {order: 1, width: 200}
+      name: photo
+      type: media
+    - admin_ui: {order: 2, width: 200}
+      name: thumb
+      type: media
+    - admin_ui: {order: 3, width: 200}
+      name: title
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: price
+      type: number
+    - admin_ui: {order: 5, width: 200}
+      name: unit
+      type: string
+    - admin_ui: {order: 6, width: 200}
+      name: note
+      type: string
+    - admin_ui: {order: 7, width: 200}
+      name: emoji
+      type: string
+    - admin_ui: {order: 8, width: 200}
+      name: color
+      type: string
+    - admin_ui: {order: 9, width: 200}
+      name: is_special
+      type: bool
+    - admin_ui: {order: 10, width: 200}
+      name: pinned
+      type: bool
+    - admin_ui: {order: 11, width: 200}
+      name: sold_out
+      type: bool
+    - admin_ui: {order: 12, width: 200}
+      name: active
+      type: bool
+    - admin_ui: {order: 13, width: 200}
+      name: created
+      type: datetime
+    - admin_ui: {order: 14, width: 200}
+      name: updated
+      type: datetime
+    - admin_ui: {order: 15, width: 200}
+      name: is_demo
+      type: bool
+    indexes: []
+    server: full
+    title: Items
+  bookmarks:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: user
+      target: users
+      type: link_single
+    - admin_ui: {order: 1, width: 200}
+      name: place
+      target: places
+      type: link_single
+    - admin_ui: {order: 2, width: 200}
+      name: created
+      type: datetime
+    - admin_ui: {order: 3, width: 200}
+      name: pass_count
+      type: number
+    - admin_ui: {order: 4, width: 200}
+      name: last_pass
+      type: datetime
+    indexes: []
+    server: full
+    title: Bookmarks
+  visits:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: user
+      target: users
+      type: link_single
+    - admin_ui: {order: 1, width: 200}
+      name: place
+      target: places
+      type: link_single
+    - admin_ui: {order: 2, width: 200}
+      name: day
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: created
+      type: datetime
+    indexes: []
+    server: full
+    title: Visits
+  reports:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: item
+      target: items
+      type: link_single
+    - admin_ui: {order: 1, width: 200}
+      name: place
+      target: places
+      type: link_single
+    - admin_ui: {order: 2, width: 200}
+      name: user
+      target: users
+      type: link_single
+    - admin_ui: {order: 3, width: 200}
+      name: reason
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: created
+      type: datetime
+    - admin_ui: {order: 5, width: 200}
+      name: resolved
+      type: bool
+    indexes: []
+    server: full
+    title: Reports
+  ideas:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: author
+      target: users
+      type: link_single
+    - admin_ui: {order: 1, width: 200}
+      name: place
+      target: places
+      type: link_single
+    - admin_ui: {order: 2, width: 200}
+      name: title
+      type: string
+    - admin_ui: {order: 3, width: 200}
+      name: body
+      type: string
+    - admin_ui: {order: 4, width: 200}
+      name: votes
+      type: number
+    - admin_ui: {order: 5, width: 200}
+      name: demo_votes
+      type: number
+    - admin_ui: {order: 6, width: 200}
+      name: status
+      type: string
+    - admin_ui: {order: 7, width: 200}
+      name: admin_note
+      type: string
+    - admin_ui: {order: 8, width: 200}
+      name: created
+      type: datetime
+    - admin_ui: {order: 9, width: 200}
+      name: is_demo
+      type: bool
+    indexes: []
+    server: full
+    title: Ideas
+  idea_votes:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: idea
+      target: ideas
+      type: link_single
+    - admin_ui: {order: 1, width: 200}
+      name: user
+      target: users
+      type: link_single
+    - admin_ui: {order: 2, width: 200}
+      name: created
+      type: datetime
+    indexes: []
+    server: full
+    title: Idea votes
+  settings:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: key
+      type: string
+    - admin_ui: {order: 1, width: 200}
+      name: value
+      type: simpleObject
+    indexes: []
+    server: full
+    title: Settings
+metadata: {title: MonShop, description: 'The shops on your street, open. See what independent shops, cafés and restaurants near you have today, and get 5% off where you are a regular.', logo_img: 'asset:favicon.png'}
 name: MonShop
+native_deps:
+  head_html: |-
+    <meta name="description" content="MonShop: see what the independent shops, cafés and restaurants around you have today. Bookmark a place, get 5% off.">
+    <meta name="theme-color" content="#FFF8EF">
+    <link rel="icon" type="image/svg+xml" href="_/theme/logo.svg">
+    <link rel="icon" type="image/png" href="_/theme/favicon.png">
+    <link rel="apple-touch-icon" href="_/theme/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,700&family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
+    <link rel="stylesheet" href="_/theme/theme.css">
+    <script src="_/theme/monshop.js"></script>
 package_name: MonShop
 runtime_options:
   client_version: '3'
@@ -43,9 +363,12 @@ runtime_options:
   version: 3
 services:
 - client_config: {enable_v2: true}
-  server_config: {}
+  server_config: {auto_create_missing_columns: true}
   source: /runtime/services/tables.yml
-- client_config: {allow_signup: true, confirm_email: false, enable_automatically: true, use_email: true}
+- client_config: {allow_remember_me: true, allow_signup: true, confirm_email: false, enable_automatically: true, remember_me_days: 30, require_secure_passwords: false, use_email: true, use_google: false}
   server_config: {user_table: users}
   source: /runtime/services/anvil/users.yml
-startup: {module: Form1, type: form}
+- client_config: {}
+  server_config: {}
+  source: /runtime/services/anvil/email.yml
+startup: {module: Main, type: form}

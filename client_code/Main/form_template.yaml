@@ -1,0 +1,43 @@
+is_package: true
+container:
+  type: HtmlTemplate
+  properties:
+    html: |
+      <div class="ms-shell landing-mode">
+        <header class="ms-header">
+          <div class="ms-header-inner">
+            <a class="ms-logo" href="#welcome" title="About MonShop"><img src="_/theme/logo.svg" alt=""><span class="word">Mon<b>Shop</b></span></a>
+            <nav class="ms-nav">
+              <a href="#map" data-nav="map"><span class="ico">🗺️</span><span>Explore</span></a>
+              <a href="#fresh" data-nav="fresh"><span class="ico">✨</span><span>Fresh</span></a>
+              <a href="#saved" data-nav="saved"><span class="ico">🔖</span><span>Saved</span></a>
+              <span class="sep"></span>
+              <a href="#sell" data-nav="sell" class="sell"><span class="ico">🏪</span><span>My shop</span></a>
+              <a href="#admin" data-nav="admin" class="admin js-admin hidden"><span class="ico">🛠️</span><span>Admin</span></a>
+            </nav>
+            <div class="ms-header-right">
+              <button type="button" class="ms-btn ghost sm js-signin">Sign in</button>
+              <div class="ms-me js-me hidden">
+                <button type="button" class="ms-me-btn js-me-btn" aria-label="Your menu"><span class="ms-avatar js-avatar">?</span></button>
+                <div class="ms-menu">
+                  <div class="head"><b class="js-name">You</b><span class="tiny muted js-email"></span></div>
+                  <hr>
+                  <a href="#saved">🔖 Saved places &amp; passes</a>
+                  <a href="#sell">🏪 My shop</a>
+                  <a href="#council">🗳️ Shopkeepers' Council</a>
+                  <a href="#admin" class="js-admin hidden">🛠️ Admin</a>
+                  <a href="#welcome">🏠 About MonShop</a>
+                  <hr>
+                  <button type="button" class="js-logout">👋 Sign out</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+        <main class="ms-main" anvil-slot="content"></main>
+        <footer class="ms-footer js-footer">
+          <div><b style="color:var(--ink)">MonShop</b> · your street, open</div>
+          <div style="margin-top:6px"><a href="#map">Explore</a> · <a href="#sell">For shopkeepers</a> · <a href="#council">Shopkeepers' Council</a> · <a href="#welcome">About</a></div>
+        </footer>
+      </div>
+components: []

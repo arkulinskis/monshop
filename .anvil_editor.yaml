@@ -1,8 +1,7 @@
 unique_ids:
   assets:
     theme.css: TLZNI2C7UO2WXA7WP76MOBQZJCGQZ3CF
-  forms:
-    Form1: RG5ARVW3U3E2NNA6FCGEIGPIDH6ZFYDI
+  forms: {}
   modules: {}
   scripts: {}
   server_modules: {}

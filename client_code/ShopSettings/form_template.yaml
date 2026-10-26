@@ -1,0 +1,5 @@
+is_package: true
+container:
+  type: HtmlTemplate
+  properties: {html: ''}
+components: []
