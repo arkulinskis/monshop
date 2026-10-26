@@ -59,7 +59,9 @@ class MapView(object):
       return
     self.map = L.map(self._el(), {"scrollWheelZoom": self.scroll_zoom, "zoomControl": True})
     self.map.setView(self.center, self.zoom)
-    L.tileLayer(TILES, {"attribution": ATTRIBUTION, "maxZoom": 19}).addTo(self.map)
+    # OSM answers "403 Access blocked" to tile requests without a Referer, so always send our origin.
+    L.tileLayer(TILES, {"attribution": ATTRIBUTION, "maxZoom": 19,
+                        "referrerPolicy": "strict-origin-when-cross-origin"}).addTo(self.map)
     if self.on_click:
       self.map.on("click", lambda e: self.on_click(e.latlng.lat, e.latlng.lng))
     queued, self._queue = self._queue, []
