@@ -43,6 +43,8 @@ def refresh_me():
     me = res
     if main is not None:
       main.update_header()
+  from . import legal
+  legal.refresh_soon()  # Privacy & Terms: records the sign-up tick, or reminds people to review
   return me
 
 

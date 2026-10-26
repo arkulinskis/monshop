@@ -4,7 +4,7 @@ import anvil.js
 import anvil.users
 import anvil.server
 
-from .. import ui, state
+from .. import ui, state, legal
 from ..Landing import Landing
 from ..MapPage import MapPage
 from ..Fresh import Fresh
@@ -81,6 +81,7 @@ class Main(MainTemplate):
   def _logout(self, e=None):
     anvil.users.logout()
     state.me = None
+    legal.signed_out()
     self.me_box.classList.remove("open")
     self.update_header()
     ui.toast("Signed out. See you on the street 👋")

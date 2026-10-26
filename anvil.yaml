@@ -47,6 +47,18 @@ db_schema:
       client_hidden: false
       name: is_admin
       type: bool
+    - admin_ui: {order: 11, width: 200}
+      client_hidden: false
+      name: legal_version
+      type: string
+    - admin_ui: {order: 12, width: 200}
+      client_hidden: false
+      name: legal_accepted_at
+      type: datetime
+    - admin_ui: {order: 13, width: 200}
+      client_hidden: false
+      name: legal_source
+      type: string
     indexes: []
     server: full
     title: Users
@@ -344,6 +356,7 @@ metadata: {title: MonShop, description: 'The shops on your street, open. See wha
 name: MonShop
 native_deps:
   head_html: |-
+    <script src="_/theme/legal-kit.js?v=51e2bcd1cf"></script>
     <meta name="description" content="MonShop: see what the independent shops, cafés and restaurants around you have today. Bookmark a place, get 5% off.">
     <meta name="theme-color" content="#FFF8EF">
     <meta name="referrer" content="strict-origin-when-cross-origin">

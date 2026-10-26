@@ -4,7 +4,7 @@ import anvil.js
 import anvil.server
 import anvil.users
 
-from . import ui, state, catalog
+from . import ui, state, catalog, legal
 
 
 # ================================================================== sign in / sign up
@@ -30,6 +30,7 @@ class _Auth(object):
         <div class="f-name">{ui.field("What should we call you?", '<input class="ms-input js-name" autocomplete="name" maxlength="40" placeholder="First name is fine">')}</div>
         {ui.field("Email", '<input class="ms-input js-email" type="email" autocomplete="email" placeholder="you@example.com">')}
         {ui.field("Password", f'<input class="ms-input js-pw" type="password" autocomplete="current-password" placeholder="{pw_hint}">')}
+        <div class="f-legal">{legal.consent_field()}</div>
         <button type="button" class="ms-btn lg block t-go" data-act="go"></button>
         <div class="switch">
           <span class="t-sw"></span> <button type="button" class="ms-link" data-act="switch"></button>
@@ -58,6 +59,7 @@ class _Auth(object):
     q("[data-act=switch]").textContent = "Sign in" if signup else "Create an account"
     q(".js-pw").setAttribute("autocomplete", "new-password" if signup else "current-password")
     ui.show(q(".f-name"), signup)
+    ui.show(q(".f-legal"), signup)
     ui.show(q(".f-forgot"), not signup)
     self.error(None)
 
@@ -80,6 +82,9 @@ class _Auth(object):
         if len(name) < 2:
           done()
           return self.error("Tell us what to call you (2+ characters).")
+        if not legal.consent_ok(self.c):
+          done()
+          return
         anvil.users.signup_with_email(email, pw, remember=True)
         anvil.server.call("update_me", {"display_name": name})
       else:
