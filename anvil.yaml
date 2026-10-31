@@ -356,6 +356,8 @@ metadata: {title: MonShop, description: 'The shops on your street, open. See wha
 name: MonShop
 native_deps:
   head_html: |-
+    <!-- Prepsto feedback panel: the footer's Suggest an idea link (data-prepsto-open) opens it -->
+    <script src="https://prepsto.com/_/theme/widget.js" data-prepsto="n3hxrpp" data-button="false" data-label="Suggest an idea" async></script>
     <script src="_/theme/legal-kit.js?v=cec2e94afb"></script>
     <meta name="description" content="MonShop: see what the independent shops, cafés and restaurants around you have today. Bookmark a place, get 5% off.">
     <meta name="theme-color" content="#FFF8EF">
