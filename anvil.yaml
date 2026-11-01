@@ -352,13 +352,37 @@ db_schema:
     indexes: []
     server: full
     title: Settings
-metadata: {title: MonShop, description: 'The shops on your street, open. See what independent shops, cafés and restaurants near you have today, and get 5% off where you are a regular.', logo_img: 'asset:favicon.png'}
+metadata:
+  description: "See what independent shops, cafés and restaurants near you have today, from real shelf photos and specials, and get 5% off where you are a regular."
+  logo_img: "asset:favicon.png"
+  title: "MonShop: the independent shops on your street, open"
 name: MonShop
 native_deps:
   head_html: |-
     <!-- Prepsto feedback panel (the only feedback channel): every Submit feedback link (data-prepsto-open) opens it -->
     <script src="https://prepsto.com/_/theme/widget.js" data-prepsto="n3hxrpp" data-button="false" data-label="Submit feedback" async></script>
     <script src="_/theme/legal-kit.js?v=418953be2b"></script>
+    <!-- seo:start (APP_MAKER/seo: edit seo/apps/monshop.json and run seo.py, not here) -->
+    <link rel="canonical" href="https://monshop.ca/">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="keywords" content="shop local app, independent shops near me, local cafés and restaurants, daily specials near me, neighbourhood shops map, loyalty discount, small business marketing app, support local business, boutiques près de chez moi">
+    <meta name="author" content="Arkvital">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="MonShop">
+    <meta property="og:title" content="MonShop: the independent shops on your street, open">
+    <meta property="og:description" content="See what independent shops, cafés and restaurants near you have today, from real shelf photos and specials, and get 5% off where you are a regular.">
+    <meta property="og:locale" content="en_CA">
+    <meta property="og:url" content="https://monshop.ca/">
+    <meta property="og:image" content="https://monshop.ca/_/theme/og-image.png">
+    <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="MonShop: See what the shops, cafés and restaurants near you have today">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MonShop: the independent shops on your street, open">
+    <meta name="twitter:description" content="See what independent shops, cafés and restaurants near you have today, from real shelf photos and specials, and get 5% off where you are a regular.">
+    <meta name="twitter:image" content="https://monshop.ca/_/theme/og-image.png">
+    <link rel="alternate" type="text/plain" title="MonShop for AI assistants" href="https://monshop.ca/llms.txt">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "@id": "https://monshop.ca/#app", "name": "MonShop", "url": "https://monshop.ca/", "description": "See what independent shops, cafés and restaurants near you have today, from real shelf photos and specials, and get 5% off where you are a regular.", "image": "https://monshop.ca/_/theme/og-image.png", "inLanguage": "en", "publisher": {"@id": "https://arkvital.com/#org"}, "keywords": "shop local app, independent shops near me, local cafés and restaurants, daily specials near me, neighbourhood shops map, loyalty discount, small business marketing app, support local business, boutiques près de chez moi", "applicationCategory": "ShoppingApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript and a modern web browser", "featureList": ["A map of independent shops, cafés and restaurants near you", "Real shelf photos and today's specials", "Bookmark a place to get a live 5% pass at the counter", "Shopkeepers post in seconds with Snap & post", "A Shopkeepers' Council to suggest and vote on features"], "audience": {"@type": "Audience", "audienceType": "Neighbours who shop local, and the shopkeepers, cafés and restaurants on their street"}}, {"@type": "WebSite", "@id": "https://monshop.ca/#site", "url": "https://monshop.ca/", "name": "MonShop", "publisher": {"@id": "https://arkvital.com/#org"}}, {"@type": "Organization", "@id": "https://arkvital.com/#org", "name": "Arkvital", "url": "https://arkvital.com", "email": "arkvital@outlook.com", "address": {"@type": "PostalAddress", "addressLocality": "Montreal", "addressRegion": "QC", "addressCountry": "CA"}}]}</script>
+    <!-- seo:end -->
     <meta name="description" content="MonShop: see what the independent shops, cafés and restaurants around you have today. Bookmark a place, get 5% off.">
     <meta name="theme-color" content="#FFF8EF">
     <meta name="referrer" content="strict-origin-when-cross-origin">
