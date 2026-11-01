@@ -1,4 +1,5 @@
-"""The landing page: two clear doors, one for shoppers, one for shopkeepers."""
+"""The landing page: a live-map hero (today's shops pinned around you, the pitch in a card), then two clear doors,
+one for shoppers, one for shopkeepers."""
 
 
 def _facade(x, w, h, wall, awn, emoji, glass="#CFEDEF", door="#211C33"):
@@ -96,10 +97,38 @@ _STRIP = ("<span>No ads</span><span>No pay-to-rank</span><span>No algorithm betw
           "<span>5% off where you're a regular</span><span>Built with shopkeepers, not on them</span>"
           "<span>Photos of what's really on the shelf</span>")
 
+def _map():
+  """The hero map: a made-up old-town corner (tilted street grid, a park, the river) with today's shops pinned on it."""
+  streets = "".join(f'<path d="M{i * 120} -200 L{i * 120 + 300} 900"/>' for i in range(-6, 22))
+  streets += "".join(f'<path d="M-300 {i * 90} L1600 {i * 90 - 160}"/>' for i in range(-4, 14))
+  shops = [(790, 150, "🥖", "#EE5235", "Sourdough · €4.50", -6, "#FFC845"), (960, 110, "☕", "#0F7D73", "Flat white · €3.20", 5, "#FFFFFF"),
+           (1050, 236, "💐", "#E0A314", "Tulips, today!", -4, "#FFC845"), (880, 330, "📚", "#5B45B0", "5% off · regular", 6, "#FFFFFF"),
+           (1060, 420, "🧀", "#EE5235", "Fresh in", -5, "#FFC845"), (760, 450, "🍜", "#0F7D73", "Lunch special", 4, "#FFFFFF")]
+  pins = "".join(_pin(x, y, e, c) + _tag(x + 26, y + 6, t, r, f) for x, y, e, c, t, r, f in shops)
+  return (
+    '<svg viewBox="0 0 1280 640" preserveAspectRatio="xMaxYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+    '<defs><filter id="sh" x="-30%" y="-30%" width="160%" height="170%">'
+    '<feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#211C33" flood-opacity=".18"/></filter></defs>'
+    '<rect width="1280" height="640" fill="#FBEFDF"/>'
+    '<path d="M1280 470 C1120 520 1000 570 900 640 L1280 640 Z" fill="#CFEDEF"/>'
+    '<path d="M640 40 L800 0 L840 110 L680 150 Z" fill="#D6F0EB"/>'
+    f'<g stroke="#EADCC8" stroke-width="16" fill="none">{streets}</g>'
+    f'<g stroke="#FFFFFF" stroke-width="11" fill="none">{streets}</g>'
+    '<g fill="#B9A98F" font-family="Figtree, sans-serif" font-size="13" font-weight="800" letter-spacing="2">'
+    '<text x="690" y="96" transform="rotate(-14 690 96)">PARK</text><text x="1080" y="600" transform="rotate(-12 1080 600)">RIVER</text></g>'
+    '<circle cx="960" cy="300" r="120" fill="rgba(15,125,115,.08)" stroke="#0F7D73" stroke-width="2" stroke-dasharray="6 6"/>'
+    '<circle cx="960" cy="300" r="9" fill="#2f6fed" stroke="#fff" stroke-width="3"/>'
+    + pins + '</svg>'
+  )
+
+
+MAP_SVG = _map()
+
 HTML = f'''
 <div class="lp">
   <section class="lp-hero">
-    <div>
+    <div class="lp-mapbg">{MAP_SVG}</div>
+    <div class="lp-card">
       <div class="ms-kicker">Your street, open</div>
       <h1>See what the shops around you have <em>today</em>.</h1>
       <p class="lede">MonShop is a live map of the independent shops, cafés and restaurants near you, with
@@ -111,7 +140,7 @@ HTML = f'''
       </div>
       <div class="small muted mt">Free for everyone. No ads. No account needed to look around.</div>
     </div>
-    <div class="art">{STREET_SVG}</div>
+    <span class="lp-legend">🗺️ Today, on your street</span>
   </section>
 
   <section class="lp-doors" id="doors">

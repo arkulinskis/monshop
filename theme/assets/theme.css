@@ -558,7 +558,12 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
 
 /* ------------------------------------------------------------ landing */
 .lp { overflow: hidden; }
-.lp-hero { max-width: 1240px; margin: 0 auto; padding: 48px 20px 30px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+/* live-map hero: the street map is the background, today's shops are pins, the pitch sits in a card on the left */
+.lp-hero { position: relative; min-height: 600px; display: flex; align-items: center; padding: 48px max(20px, calc((100% - 1240px) / 2)); margin-bottom: 40px; border-bottom: 1px solid var(--line-2); }
+.lp-mapbg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.lp-mapbg svg { width: 100%; height: 100%; display: block; }
+.lp-card { position: relative; z-index: 1; max-width: 580px; background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow-2); padding: 34px 34px 28px; }
+.lp-legend { position: absolute; right: 20px; bottom: 16px; z-index: 1; font-weight: 800; font-size: 13px; background: var(--ink); color: var(--sun); padding: 7px 12px; border-radius: 999px; }
 .lp-hero h1 { margin-bottom: 18px; }
 .lp-hero h1 em { font-style: italic; color: var(--tomato); }
 .lp-hero .lede { font-size: 19.5px; color: var(--ink-2); max-width: 560px; }
@@ -622,8 +627,10 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
 .lp-final .box { background: var(--sun); border-radius: 32px; padding: 40px 34px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
 .lp-final h2 { margin: 0; }
 @media (max-width: 900px) {
-  .lp-hero { grid-template-columns: 1fr; padding-top: 26px; gap: 10px; }
-  .lp-hero .art { order: -1; max-width: 520px; }
+  .lp-hero { display: block; min-height: 0; padding: 300px 16px 24px; }
+  .lp-mapbg { bottom: auto; height: 330px; }
+  .lp-card { padding: 24px 20px 22px; }
+  .lp-legend { display: none; }
   .lp-doors, .lp-steps, .lp-feats, .lp-promise, .lp-five, .lp-keep-grid { grid-template-columns: 1fr; }
   .lp-five > div { border-right: 0; border-bottom: 1px solid var(--line); }
   .lp-door { padding: 24px 22px; min-height: 0; }
