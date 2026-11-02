@@ -361,7 +361,7 @@ native_deps:
   head_html: |-
     <!-- Prepsto feedback panel (the only feedback channel): every Submit feedback link (data-prepsto-open) opens it -->
     <script src="https://prepsto.com/_/theme/widget.js" data-prepsto="n3hxrpp" data-button="false" data-label="Submit feedback" async></script>
-    <script src="_/theme/legal-kit.js?v=bfd08459fe"></script>
+    <script src="_/theme/legal-kit.js?v=82972d676d"></script>
     <!-- seo:start (APP_MAKER/seo: edit seo/apps/monshop.json and run seo.py, not here) -->
     <link rel="canonical" href="https://monshop.ca/">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -405,9 +405,12 @@ services:
 - client_config: {enable_v2: true}
   server_config: {auto_create_missing_columns: true}
   source: /runtime/services/tables.yml
-- client_config: {allow_remember_me: true, allow_signup: true, confirm_email: false, enable_automatically: true, remember_me_days: 30, require_secure_passwords: false, use_email: true, use_google: false}
+- client_config: {allow_remember_me: true, allow_signup: true, confirm_email: false, enable_automatically: true, remember_me_days: 30, require_secure_passwords: false, use_email: true, use_google: true}
   server_config: {user_table: users}
   source: /runtime/services/anvil/users.yml
+- client_config: {}
+  server_config: {}
+  source: /runtime/services/google.yml
 - client_config: {}
   server_config: {}
   source: /runtime/services/anvil/email.yml

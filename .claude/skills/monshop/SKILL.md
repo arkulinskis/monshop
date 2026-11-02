@@ -67,6 +67,7 @@ theme/assets/            theme.css (design system), monshop.js (in-browser searc
 
 ## Gotchas
 
+- **Continue with Google** (client_code/dialogs.py `_Auth.google`): `login_with_google()` returns None for someone without an account, so the code then calls `signup_with_google()`; on the sign-up view it needs the Privacy & Terms tick first. Needs `use_google` + the Google service in anvil.yaml.
 - OpenStreetMap tiles 403 without a Referer: the map sends one (`aa055ba`). Don't remove it.
 - monshop.ca is the only non-.com domain (Namecheap). A new SSL error after DNS changes is usually propagation.
 - Photos are shrunk in the browser before upload (dialogs.compose); keep media small.

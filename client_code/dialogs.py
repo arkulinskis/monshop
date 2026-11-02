@@ -6,6 +6,17 @@ import anvil.users
 
 from . import ui, state, catalog, legal
 
+GOOGLE_G = '<svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true" style="flex:none"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>'
+
+
+def _google_step_done():
+  """After login_with_google() gave None: did the person finish the Google window (they just have no account yet)?"""
+  try:
+    import anvil.google.auth
+    return bool(anvil.google.auth.get_user_email())
+  except Exception:
+    return True  # can't tell: go on to sign-up, which asks Google again if needed
+
 
 # ================================================================== sign in / sign up
 
@@ -32,11 +43,13 @@ class _Auth(object):
         {ui.field("Password", f'<input class="ms-input js-pw" type="password" autocomplete="current-password" placeholder="{pw_hint}">')}
         <div class="f-legal">{legal.consent_field()}</div>
         <button type="button" class="ms-btn lg block t-go" data-act="go"></button>
+        <div style="text-align:center;opacity:.6;margin:10px 0;font-size:14px">or</div>
+        <button type="button" class="ms-btn lg block ghost" data-act="google">{GOOGLE_G}Continue with Google</button>
         <div class="switch">
           <span class="t-sw"></span> <button type="button" class="ms-link" data-act="switch"></button>
           <div class="f-forgot" style="margin-top:8px"><button type="button" class="ms-link" data-act="forgot">Forgot your password?</button></div>
         </div>
-      </div>''', {"go": lambda a: self.submit(), "forgot": lambda a: self.forgot(),
+      </div>''', {"go": lambda a: self.submit(), "forgot": lambda a: self.forgot(), "google": lambda a: self.google(),
                   "switch": lambda a: self.set_mode("login" if self.mode == "signup" else "signup")})
     for sel in (".js-name", ".js-email", ".js-pw"):
       ui.on_enter(ui.q(self.c, sel), self.submit)
@@ -96,6 +109,25 @@ class _Auth(object):
     except anvil.users.AuthenticationFailed:
       done()
       return self.error("That email and password don't match.")
+    except Exception as e:
+      done()
+      return self.error(ui._clean_msg(e).replace("anvil.users.", ""))
+    done()
+    ui.close_modal(self.c, True)
+
+  def google(self):
+    """Continue with Google: sign in, or create the account on the first visit (sign-up asks for the tick here too)."""
+    if self.mode == "signup" and not legal.consent_ok(self.c):
+      return
+    done = ui.busy(ui.q(self.c, "[data-act=google]"), "One moment…")
+    try:
+      if anvil.users.login_with_google(remember=True) is None:
+        if not _google_step_done() or anvil.users.signup_with_google(remember=True) is None:
+          done()
+          return self.error("Google sign-in was cancelled.")
+        name = ui.val(self.c, ".js-name") if self.mode == "signup" else ""
+        if len(name) >= 2:
+          anvil.server.call("update_me", {"display_name": name})
     except Exception as e:
       done()
       return self.error(ui._clean_msg(e).replace("anvil.users.", ""))
