@@ -171,7 +171,7 @@ def item_view(item, place):
       <div class="ph {ph_cls}">{ph}</div>
       <div class="bd">
         <div class="row">{pills}</div>
-        <h2 style="margin:0">{ui.esc(item.get("title") or "On the shelf")}</h2>
+        <h2 class="nm" style="margin:0">{ui.esc(item.get("title") or "On the shelf")}</h2>
         {f'<div class="price-big">{ui.esc(price)}</div>' if price else '<div class="muted">Ask in the shop for the price.</div>'}
         {f'<p>{ui.esc(item.get("note"))}</p>' if item.get("note") else ''}
         <div class="small faint">Posted {ui.ago(item.get("created"))}</div>

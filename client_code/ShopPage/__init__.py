@@ -93,7 +93,7 @@ class ShopPage(ShopPageTemplate):
       <div class="sp-hero {hero_cls}">{hero_bg}
         <div class="in">
           <div class="row" style="margin-bottom:10px">{kind_pill}{status}</div>
-          <h1>{ui.esc(p["name"])}</h1>
+          <h1 class="nm">{ui.esc(p["name"])}</h1>
           <div class="tag">{ui.cat_line(p)}{(" · " + ui.esc(p["tagline"])) if p.get("tagline") else ""}</div>
         </div>
       </div>

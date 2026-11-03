@@ -65,6 +65,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
 .stack > * + * { margin-top: 12px; }
 .mt { margin-top: 16px; } .mt-lg { margin-top: 32px; } .mb { margin-bottom: 16px; }
 .ser { font-family: var(--head); }
+/* Names people type (shops, places, items, specials) use Figtree: Fraunces draws the macrons of
+   Latvian a/e/i/u-with-macron in the wrong place (checked Nov 2026, every Google Fonts version). */
+.nm, .mp-card h4, .ms-popup h4, .ms-pass .shop, .sp-special .s-t { font-family: var(--body); font-weight: 800; letter-spacing: -.02em; }
 
 /* Anvil scaffolding we don't want */
 .anvil-container, .html-templated-panel { min-width: 0; }

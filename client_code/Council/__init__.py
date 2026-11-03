@@ -86,7 +86,7 @@ class Council(CouncilTemplate):
           <span class="a">▲</span><span class="n">{i["votes"]}</span></button>
         <div class="grow">
           <div class="row" style="gap:8px">{ui.pill(label, color)}<span class="tiny faint">{ui.esc(i["by_emoji"])} {ui.esc(i["by"])} · {ui.ago(i["created"])}</span></div>
-          <h3 style="margin:6px 0 0;font-size:19px">{ui.esc(i["title"])}</h3>{body}{note}
+          <h3 class="nm" style="margin:6px 0 0;font-size:19px">{ui.esc(i["title"])}</h3>{body}{note}
         </div></div>''')
     ui.q(self, ".js-list").innerHTML = "".join(rows)
 

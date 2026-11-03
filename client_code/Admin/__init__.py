@@ -135,7 +135,7 @@ class Admin(AdminTemplate):
       <div style="min-width:0">
         <div class="row" style="gap:6px">{ui.pill(label, color)}{ui.pill(ui.esc(catalog.KIND_LABEL.get(p["kind"], "")), "teal" if p["kind"] == "restaurant" else "tomato")}
           <span class="tiny faint">created {ui.ago(p.get("created"))}</span></div>
-        <h3 style="margin:6px 0 2px">{ui.esc(p["name"])}</h3>
+        <h3 class="nm" style="margin:6px 0 2px">{ui.esc(p["name"])}</h3>
         <div class="small muted">{ui.cat_line(p)} · <a target="_blank" href="{osm}">📍 {ui.esc(p.get("address") or "no address")}</a></div>
         <div class="small muted">👤 {who} · {p.get("n_items", 0)} posts</div>
         {f'<div class="small" style="margin-top:4px">“{ui.esc(p["tagline"])}”</div>' if p.get("tagline") else ""}
