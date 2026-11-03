@@ -361,7 +361,7 @@ native_deps:
   head_html: |-
     <!-- Prepsto feedback panel (the only feedback channel): every Submit feedback link (data-prepsto-open) opens it -->
     <script src="https://prepsto.com/_/theme/widget.js" data-prepsto="n3hxrpp" data-button="false" data-label="Submit feedback" async></script>
-    <script src="_/theme/legal-kit.js?v=82972d676d"></script>
+    <script src="_/theme/legal-kit.js?v=5962cc775c"></script>
     <!-- seo:start (APP_MAKER/seo: edit seo/apps/monshop.json and run seo.py, not here) -->
     <link rel="canonical" href="https://monshop.ca/">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -395,7 +395,7 @@ native_deps:
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
     <link rel="stylesheet" href="_/theme/theme.css">
-    <script src="_/theme/monshop.js"></script>
+    <script src="_/theme/monshop.js?v=2"></script>
 package_name: MonShop
 runtime_options:
   client_version: '3'
