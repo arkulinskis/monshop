@@ -1,0 +1,24 @@
+<div class="ad-q">
+  <div class="pic" anvil:dom-node="pic"><span anvil:dom-node="pic_emo" aria-hidden="true"></span></div>
+  <div class="ad-q-main">
+    <div class="row ad-q-pills"><span class="ms-pill" anvil:dom-node="status"></span><span class="ms-pill" anvil:dom-node="kind"></span>
+      <span class="small faint" anvil:dom-node="created"></span></div>
+    <h3 class="nm ad-q-name" anvil:dom-node="name"></h3>
+    <div class="small muted"><span anvil:dom-node="cat"></span> · <a target="_blank" rel="noopener" anvil:dom-node="osm"></a></div>
+    <div class="small muted">👤 <span anvil:dom-node="who"></span><a anvil:dom-node="mail"></a><span anvil:dom-node="posts"></span></div>
+    <div class="small ad-q-tag" anvil:dom-node="tagline"></div>
+    <div class="small bad-t" anvil:dom-node="reason"></div>
+    <div class="row ad-thumbs">
+      <anvil-component type="MonShop.Components.Tile" name="thumb1"></anvil-component>
+      <anvil-component type="MonShop.Components.Tile" name="thumb2"></anvil-component>
+      <anvil-component type="MonShop.Components.Tile" name="thumb3"></anvil-component>
+    </div>
+  </div>
+  <div class="acts">
+    <anvil-component type="Button" name="approve_button" prop:text="✓ Approve" prop:role='["ms-btn", "ok", "sm"]'></anvil-component>
+    <anvil-component type="Button" name="reject_button" prop:text="✕ Reject" prop:role='["ms-btn", "ghost", "bad", "sm"]'></anvil-component>
+    <anvil-component type="Button" name="suspend_button" prop:text="Suspend" prop:role='["ms-btn", "ghost", "bad", "sm"]'></anvil-component>
+    <anvil-component type="Button" name="reinstate_button" prop:text="Reinstate" prop:role='["ms-btn", "ok", "sm"]'></anvil-component>
+    <a class="ms-btn ghost sm" anvil:name="preview_link">👀 Preview</a>
+  </div>
+</div>

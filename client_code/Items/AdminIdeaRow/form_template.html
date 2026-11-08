@@ -1,0 +1,14 @@
+<div class="ad-idea">
+  <div class="ad-idea-main">
+    <b anvil:dom-node="title"></b>
+    <div class="small faint" anvil:dom-node="by"></div>
+    <div class="small muted" anvil:dom-node="body"></div>
+    <div class="cn-note" anvil:dom-node="note"></div>
+  </div>
+  <div class="ad-idea-votes"><b anvil:dom-node="votes"></b></div>
+  <div class="ad-idea-status"><anvil-component type="DropDown" name="status_box" prop:role='["ms-select"]'></anvil-component></div>
+  <div class="row ad-idea-acts">
+    <anvil-component type="Button" name="reply_button" prop:text="💬 Reply" prop:role='["ms-btn", "ghost", "sm"]'></anvil-component>
+    <anvil-component type="Button" name="delete_button" prop:text="🗑" prop:role='["ms-icon-btn"]' prop:tooltip="Delete"></anvil-component>
+  </div>
+</div>

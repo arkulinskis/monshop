@@ -1,0 +1,31 @@
+<div class="ui ms-dlg">
+  <div class="iv">
+    <div class="ph" anvil:dom-node="ph">
+      <img anvil:dom-node="photo" alt="">
+      <div class="emo" anvil:dom-node="emo" aria-hidden="true"></div>
+    </div>
+    <div class="bd">
+      <div class="row">
+        <span class="ms-pill sun" anvil:dom-node="pill_special">✨ Special</span>
+        <span class="ms-pill bad" anvil:dom-node="pill_sold">Sold out</span>
+        <span class="ms-pill tomato" anvil:dom-node="pill_new">🆕 New</span>
+      </div>
+      <h2 class="nm iv-title" anvil:dom-node="title"></h2>
+      <div class="price-big" anvil:dom-node="price"></div>
+      <div class="muted" anvil:dom-node="no_price">Ask in the shop for the price.</div>
+      <p class="iv-note" anvil:dom-node="note"></p>
+      <div class="small faint" anvil:dom-node="posted"></div>
+      <hr>
+      <button type="button" class="ms-card flat tight iv-shop" anvil:on-dom:click="self.shop_click">
+        <span class="iv-shop-e" anvil:dom-node="shop_emoji" aria-hidden="true"></span>
+        <span class="grow"><b anvil:dom-node="shop_name"></b><br><span class="small muted" anvil:dom-node="shop_sub"></span></span>
+        <span aria-hidden="true">→</span>
+      </button>
+      <div class="row iv-acts">
+        <anvil-component type="Button" name="visit_button" prop:text="🏪 Visit the shop page" prop:role='["ms-btn"]'></anvil-component>
+        <anvil-component type="Button" name="close_button" prop:text="Close" prop:role='["ms-btn", "ghost", "sm"]'></anvil-component>
+      </div>
+      <anvil-component type="Button" name="report_button" prop:text="Report this post" prop:role='["ms-link", "quiet"]'></anvil-component>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<anvil-form layout="MonShop.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ms-page narrow">
+      <div class="ms-empty" anvil:name="loading_box"><span class="big" aria-hidden="true">⚙️</span><p>Loading your details…</p></div>
+      <div class="ms-empty" anvil:name="locked_box"><span class="big" aria-hidden="true">🔒</span><h3>We couldn't open that shop</h3>
+        <p class="muted">It may belong to someone else.</p><a class="ms-btn teal" href="#sell">Back to my shop</a></div>
+      <div anvil:name="body">
+        <a class="back-link" anvil:name="back_link">← Back to my shop</a>
+        <h1 class="page-h1">Shop details</h1>
+
+        <div class="ms-card mt">
+          <h2 class="card-h">Cover photo</h2>
+          <p class="small muted">The big picture at the top of your page. Your shopfront works great.</p>
+          <div class="sk-compose"><div class="prev cover-prev" anvil:dom-node="cover"></div></div>
+          <label class="ms-btn ghost sm sk-gal"><input type="file" accept="image/*" anvil:dom-node="cover_input">📷 Choose a cover photo</label>
+        </div>
+
+        <div class="ms-card mt">
+          <h2 class="card-h">The basics</h2>
+          <label class="ms-field"><span class="lbl">Name</span>
+            <anvil-component type="TextBox" name="name_box" prop:role='["ms-input", "big"]'></anvil-component></label>
+          <label class="ms-field"><span class="lbl">One-line tagline</span>
+            <anvil-component type="TextBox" name="tagline_box" prop:placeholder="e.g. Rye bread the way grandma made it" prop:role='["ms-input"]'></anvil-component></label>
+          <label class="ms-field"><span class="lbl">About</span>
+            <anvil-component type="TextArea" name="about_box" prop:placeholder="What makes your place yours?" prop:role='["ms-textarea"]'></anvil-component></label>
+          <anvil-component type="MonShop.Components.KindCatPicker" name="picker"></anvil-component>
+        </div>
+
+        <div class="ms-card mt">
+          <h2 class="card-h">Where you are</h2>
+          <anvil-component type="MonShop.Components.AddressPicker" name="address"></anvil-component>
+        </div>
+
+        <div class="ms-card mt">
+          <h2 class="card-h">Opening hours &amp; contact</h2>
+          <label class="ms-field"><span class="lbl">Opening hours</span>
+            <anvil-component type="TextBox" name="hours_box" prop:placeholder="e.g. Mon–Sat 9:00–18:00, Sun closed" prop:role='["ms-input"]'></anvil-component></label>
+          <label class="ms-field"><span class="lbl">Phone</span>
+            <anvil-component type="TextBox" name="phone_box" prop:type="tel" prop:role='["ms-input"]'></anvil-component></label>
+          <label class="ms-field"><span class="lbl">Website or Instagram</span>
+            <anvil-component type="TextBox" name="web_box" prop:placeholder="instagram.com/yourshop" prop:role='["ms-input"]'></anvil-component></label>
+          <label class="ms-field"><span class="lbl">Currency for your prices</span>
+            <anvil-component type="DropDown" name="currency_box" prop:role='["ms-select", "narrow"]'></anvil-component></label>
+        </div>
+
+        <anvil-component type="Label" name="err" prop:role='["msg-error"]' prop:visible="false"></anvil-component>
+        <anvil-component type="Button" name="save_button" prop:text="Save changes" prop:role='["ms-btn", "teal", "xl", "block", "mt"]'></anvil-component>
+
+        <div class="ms-card flat mt-lg">
+          <h2 class="card-h bad-t">Close this place on MonShop</h2>
+          <p class="small muted">Removes your page, all your posts and photos, and your members' bookmarks. This can't be undone.</p>
+          <anvil-component type="Button" name="close_button" prop:text="Close this place on MonShop" prop:role='["ms-btn", "ghost", "bad", "sm"]'></anvil-component>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

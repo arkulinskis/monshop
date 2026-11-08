@@ -1,0 +1,33 @@
+<anvil-form layout="MonShop.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ms-page narrow">
+      <div class="ob-steps" aria-hidden="true"><i class="on"></i><i anvil:name="step2_bar"></i><i></i></div>
+      <div anvil:name="step1">
+        <anvil-component type="Label" name="step1_title" prop:role='["page-h1"]' prop:text="What are you?"></anvil-component>
+        <anvil-component type="Label" name="step1_lead" prop:role='["lead-teal"]'></anvil-component>
+        <anvil-component type="MonShop.Components.KindCatPicker" name="picker"></anvil-component>
+        <label class="ms-field mt"><span class="lbl">What's it called?</span>
+          <anvil-component type="TextBox" name="name_box" prop:placeholder="e.g. Maiznīca Garoza" prop:role='["ms-input", "big"]'></anvil-component>
+        </label>
+        <anvil-component type="Label" name="err1" prop:role='["msg-error"]' prop:visible="false"></anvil-component>
+        <anvil-component type="Button" name="next_button" prop:text="Next: where are you? →" prop:role='["ms-btn", "teal", "xl", "block", "mt-lg"]'></anvil-component>
+      </div>
+      <div anvil:name="step2">
+        <h1 class="page-h1">Almost there: where's your front door?</h1>
+        <p class="muted">Shoppers see you on the map from here. You can change it later.</p>
+        <anvil-component type="MonShop.Components.AddressPicker" name="address"></anvil-component>
+        <details class="mt ob-more"><summary>＋ Opening hours &amp; phone (optional)</summary>
+          <div class="mt">
+            <label class="ms-field"><span class="lbl">Opening hours</span>
+              <anvil-component type="TextBox" name="hours_box" prop:placeholder="e.g. Mon–Sat 9:00–18:00" prop:role='["ms-input"]'></anvil-component></label>
+            <label class="ms-field"><span class="lbl">Phone</span>
+              <anvil-component type="TextBox" name="phone_box" prop:type="tel" prop:placeholder="+371 …" prop:role='["ms-input"]'></anvil-component></label>
+          </div>
+        </details>
+        <anvil-component type="Label" name="err2" prop:role='["msg-error"]' prop:visible="false"></anvil-component>
+        <anvil-component type="Button" name="open_button" prop:text="🏪 Open my shop" prop:role='["ms-btn", "teal", "xl", "block", "mt"]'></anvil-component>
+        <div class="center mt"><anvil-component type="Button" name="back_button" prop:text="← Back" prop:role='["ms-link", "teal-t"]'></anvil-component></div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

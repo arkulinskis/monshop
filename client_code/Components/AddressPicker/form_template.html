@@ -1,0 +1,27 @@
+---
+custom_component: true
+properties: []
+toolbox_item:
+  title: Address picker
+  group: MonShop
+help_text: |
+  Set a shop's address the easy way: "I'm here", or type it, then drag the pin to the door.
+  setup(address, lat, lng, kind, emoji); value() gives {address, lat, lng}; set_style(kind, emoji) recolours the pin.
+---
+<div class="ap">
+  <anvil-component type="Button" name="here_button" prop:text="📍 I'm at my shop right now" prop:role='["ms-btn", "teal", "block", "lg"]'></anvil-component>
+  <div class="center small muted ap-or">or type the address</div>
+  <div class="row ap-find">
+    <anvil-component type="TextBox" name="query_box" prop:placeholder="Street and number, town" prop:role='["ms-input", "grow-box"]'></anvil-component>
+    <anvil-component type="Button" name="find_button" prop:text="Find" prop:role='["ms-btn", "ink"]'></anvil-component>
+  </div>
+  <div class="ob-results" anvil:name="results_box">
+    <anvil-component type="RepeatingPanel" name="results_panel" prop:item_template="MonShop.Items.AddressResult"></anvil-component>
+    <anvil-component type="Label" name="no_match" prop:text="No match. Try adding the town, or tap the map instead." prop:role='["ob-nomatch"]'></anvil-component>
+  </div>
+  <div class="ap-map"><anvil-component type="MonShop.Components.MapView" name="map_view"></anvil-component></div>
+  <anvil-component type="Label" name="hint" prop:text="Tap the map to drop your pin." prop:role='["ap-hint"]'></anvil-component>
+  <label class="ms-field"><span class="lbl">Address shown to shoppers</span>
+    <anvil-component type="TextBox" name="address_box" prop:placeholder="e.g. Kalēju iela 12, Rīga" prop:role='["ms-input"]'></anvil-component>
+  </label>
+</div>

@@ -1,0 +1,54 @@
+<anvil-form layout="MonShop.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ms-page">
+      <div class="ms-empty" anvil:name="loading_box"><span class="big" aria-hidden="true">🏪</span><p>Opening the door…</p></div>
+      <div class="ms-empty" anvil:name="closed_box"><span class="big" aria-hidden="true">🚪</span><h3>This door is closed</h3>
+        <anvil-component type="Label" name="closed_text" prop:role='["muted-p"]' prop:text="We couldn't find that place. It may have left MonShop."></anvil-component>
+        <a class="ms-btn" href="#map">Back to the map</a></div>
+      <div anvil:name="body">
+        <div class="sp-owner" anvil:name="owner_bar"><span>🏪 This is your place. This is what shoppers see.</span>
+          <a class="ms-btn teal sm" anvil:name="manage_link">Manage my shop</a></div>
+        <div class="sp-hero" anvil:name="hero">
+          <div class="bg" anvil:dom-node="hero_bg"></div><div class="shade" anvil:dom-node="hero_shade"></div>
+          <div class="in">
+            <div class="row sp-pills"><span class="ms-pill" anvil:dom-node="kind_pill"></span><span class="ms-pill sun" anvil:dom-node="status_pill"></span></div>
+            <h1 class="nm" anvil:dom-node="name"></h1>
+            <div class="tag" anvil:dom-node="tag"></div>
+          </div>
+        </div>
+        <div class="sp-grid">
+          <div>
+            <div class="sp-special" anvil:name="special_box"><span class="s-ico" aria-hidden="true">✨</span><div>
+              <div class="small sp-special-l" anvil:dom-node="special_label"></div>
+              <div class="s-t" anvil:dom-node="special_text"></div></div></div>
+            <div class="ms-section-title first"><h2>On the shelf</h2><span class="muted small" anvil:dom-node="shelf_count"></span></div>
+            <anvil-component type="RepeatingPanel" name="shelf_panel" prop:item_template="MonShop.Items.ShelfTile" prop:role='["sp-shelf"]'></anvil-component>
+            <div class="ms-empty" anvil:name="shelf_empty"><span class="big" aria-hidden="true">📸</span><h3>Nothing posted yet</h3>
+              <p class="muted">Pop in and see for yourself. Then nudge them to post!</p></div>
+          </div>
+          <div class="sp-side">
+            <div class="ms-card">
+              <div class="sp-five"><div class="badge" aria-hidden="true">5%</div><div>
+                <anvil-component type="Label" name="five_title" prop:role='["strong"]'></anvil-component>
+                <anvil-component type="Label" name="five_text" prop:role='["small-muted"]'></anvil-component></div></div>
+              <div class="sp-cta">
+                <anvil-component type="Button" name="pass_button" prop:text="🎟️ Show my 5% pass" prop:role='["ms-btn", "ink", "lg", "block"]'></anvil-component>
+                <anvil-component type="Button" name="save_button" prop:text="🔖 Bookmark &amp; get 5% off" prop:role='["ms-btn", "lg", "block"]'></anvil-component>
+                <anvil-component type="Button" name="unsave_button" prop:text="Remove bookmark" prop:role='["ms-link", "quiet", "small"]'></anvil-component>
+              </div>
+            </div>
+            <div class="ms-card sp-info">
+              <div class="r"><span class="i" aria-hidden="true">📍</span><span><span anvil:dom-node="address"></span><br><a target="_blank" rel="noopener" anvil:dom-node="directions">Get directions →</a></span></div>
+              <div class="r" anvil:dom-node="hours_row"><span class="i" aria-hidden="true">🕐</span><span anvil:dom-node="hours"></span></div>
+              <div class="r" anvil:dom-node="phone_row"><span class="i" aria-hidden="true">📞</span><a anvil:dom-node="phone"></a></div>
+              <div class="r" anvil:dom-node="web_row"><span class="i" aria-hidden="true">🌐</span><a target="_blank" rel="noopener" anvil:dom-node="web"></a></div>
+              <p class="sp-about" anvil:dom-node="about"></p>
+            </div>
+            <div class="sp-map" anvil:name="map_box"><anvil-component type="MonShop.Components.MapView" name="map_view"></anvil-component></div>
+            <anvil-component type="Button" name="share_button" prop:text="🔗 Share this place" prop:role='["ms-btn", "ghost", "block"]'></anvil-component>
+          </div>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

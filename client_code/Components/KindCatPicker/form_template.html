@@ -1,0 +1,20 @@
+---
+custom_component: true
+properties: []
+toolbox_item:
+  title: Kind and category picker
+  group: MonShop
+help_text: |
+  "A shop" or "Food & drink", then what it mostly sells (catalog.py). setup(kind, cat); read .kind and .cat;
+  on_change(kind, cat) is called after every pick.
+---
+<div class="kc">
+  <div class="ob-kinds" role="group" aria-label="What are you?">
+    <button type="button" class="ob-kind" data-kind="shop" anvil:name="kind_shop" anvil:on-dom:click="self.kind_click">
+      <span class="e" aria-hidden="true">🛍️</span><b>A shop</b><span class="small muted">Bakery, books, flowers, vintage, a market stall…</span></button>
+    <button type="button" class="ob-kind" data-kind="restaurant" anvil:name="kind_food" anvil:on-dom:click="self.kind_click">
+      <span class="e" aria-hidden="true">🍽️</span><b>Food &amp; drink</b><span class="small muted">Restaurant, café, bar, ice cream, street food…</span></button>
+  </div>
+  <h3 class="kc-h" anvil:name="cats_title">What do you mostly sell?</h3>
+  <anvil-component type="RepeatingPanel" name="cats_panel" prop:item_template="MonShop.Items.Chip" prop:role='["ob-cats"]'></anvil-component>
+</div>

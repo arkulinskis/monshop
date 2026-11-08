@@ -1,0 +1,49 @@
+<anvil-form layout="MonShop.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="mp">
+      <aside class="mp-side">
+        <div class="mp-top">
+          <div class="mp-search">
+            <span class="lens" aria-hidden="true">🔎</span>
+            <anvil-component type="TextBox" name="search_box" prop:placeholder="Search shops &amp; what's on their shelves" prop:role='["mp-search-input"]'></anvil-component>
+            <anvil-component type="Button" name="clear_button" prop:text="✕" prop:role='["mp-clr"]' prop:visible="false" prop:tooltip="Clear"></anvil-component>
+          </div>
+          <div class="mp-hint">Typos are fine. Wildcards too:
+            <button type="button" class="mp-try" data-q="ceram*" anvil:on-dom:click="self.try_click">ceram*</button>
+            <button type="button" class="mp-try" data-q="b?gel" anvil:on-dom:click="self.try_click">b?gel</button>
+            <button type="button" class="mp-try" data-q="sourd*" anvil:on-dom:click="self.try_click">sourd*</button></div>
+          <anvil-component type="RepeatingPanel" name="filter_panel" prop:item_template="MonShop.Items.Chip" prop:role='["ms-chips", "scroll"]'></anvil-component>
+        </div>
+        <div class="mp-count">
+          <anvil-component type="Label" name="count_label" prop:text="Finding places near you…" prop:role='["inline"]'></anvil-component>
+          <anvil-component type="Label" name="radius_label" prop:role='["inline"]'></anvil-component>
+        </div>
+        <div class="mp-list">
+          <anvil-component type="RepeatingPanel" name="list_panel" prop:item_template="MonShop.Items.PlaceCard" prop:role='["mp-cards"]'></anvil-component>
+          <div class="ms-empty" anvil:name="nomatch_box">
+            <span class="big" aria-hidden="true">🤷</span>
+            <h3>Nothing matches that here</h3>
+            <p class="muted">Try a shorter word, a wildcard like ceram*, or search a wider area.</p>
+            <anvil-component type="Button" name="wider_button" prop:text="Search 3× wider" prop:role='["ms-btn", "ghost"]'></anvil-component>
+          </div>
+          <div class="ms-empty" anvil:name="none_box">
+            <span class="big" aria-hidden="true">🏙️</span>
+            <anvil-component type="Label" name="none_title" prop:role='["empty-title"]'></anvil-component>
+            <p class="muted">MonShop grows one street at a time. Know a shop or café that deserves a spot?</p>
+            <div class="ms-stack-narrow">
+              <anvil-component type="Button" name="invite_button" prop:text="💌 Copy an invite for them" prop:role='["ms-btn", "block"]'></anvil-component>
+              <anvil-component type="Button" name="wider2_button" prop:text="Search 3× wider" prop:role='["ms-btn", "ghost", "block"]'></anvil-component>
+              <anvil-component type="Button" name="demo_button" prop:text="👀 Peek at the demo street (Riga)" prop:role='["ms-btn", "ghost", "block"]'></anvil-component>
+              <a class="ms-btn teal block" href="#sell">🏪 I run a shop here</a>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div class="mp-mapwrap">
+        <anvil-component type="MonShop.Components.MapView" name="map_view"></anvil-component>
+        <div class="mp-float tc"><anvil-component type="Button" name="area_button" prop:text="🔄 Search this area" prop:role='["ms-btn", "ink", "sm"]' prop:visible="false"></anvil-component></div>
+        <div class="mp-float br"><anvil-component type="Button" name="me_button" prop:text="📍" prop:role='["ms-icon-btn"]' prop:tooltip="Near me"></anvil-component></div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

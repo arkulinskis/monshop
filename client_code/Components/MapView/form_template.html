@@ -1,0 +1,11 @@
+---
+custom_component: true
+properties: []
+toolbox_item:
+  title: Map
+  group: MonShop
+help_text: |
+  A Leaflet map (OpenStreetMap). Call setup(center, zoom, scroll_zoom, on_click) once, then use .engine
+  (mapkit.MapView: add_place, show_me, set_view, fit, clear ...). Its height comes from the page's CSS around it.
+---
+<div class="ms-map-box"><div class="ms-map" anvil:dom-node="map"></div></div>

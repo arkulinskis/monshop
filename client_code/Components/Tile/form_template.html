@@ -1,0 +1,20 @@
+---
+custom_component: true
+properties: []
+toolbox_item:
+  title: Post tile
+  group: MonShop
+help_text: |
+  A square post tile: the photo (or a colourful emoji tile), the price tag, Special / pinned badges and "Sold out".
+  Call show(item, currency, tall=False, price=True, badges=True).
+---
+<div class="tile-cell">
+  <div class="ms-tile" anvil:dom-node="box">
+    <div class="img" anvil:dom-node="img"></div>
+    <div class="emo" anvil:dom-node="emo" aria-hidden="true"></div>
+    <span class="ms-star" anvil:dom-node="star">✨ Special</span>
+    <span class="ms-pinned" anvil:dom-node="pinned" title="Pinned">📌</span>
+    <div class="so" anvil:dom-node="sold">Sold out</div>
+    <span class="ms-price" anvil:dom-node="price"><span anvil:dom-node="amount"></span><span class="u" anvil:dom-node="unit"></span></span>
+  </div>
+</div>

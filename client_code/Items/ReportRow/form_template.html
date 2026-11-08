@@ -1,0 +1,12 @@
+<div class="ad-q ad-report">
+  <div class="ad-report-tile"><anvil-component type="MonShop.Components.Tile" name="tile"></anvil-component></div>
+  <div>
+    <b anvil:dom-node="title"></b> at <a anvil:dom-node="place"></a><span anvil:dom-node="closed">a closed place</span>
+    <div class="small ad-report-reason" anvil:dom-node="reason"></div>
+    <div class="small faint" anvil:dom-node="by"></div>
+  </div>
+  <div class="acts">
+    <anvil-component type="Button" name="remove_button" prop:text="Remove post" prop:role='["ms-btn", "bad-solid", "sm"]'></anvil-component>
+    <anvil-component type="Button" name="dismiss_button" prop:text="Dismiss" prop:role='["ms-btn", "ghost", "sm"]'></anvil-component>
+  </div>
+</div>

@@ -1,8 +1,10 @@
-"""A thin Leaflet wrapper for Anvil: OpenStreetMap tiles (warmed up in CSS) and MonShop pins."""
+"""The map engine: a thin Leaflet wrapper (OpenStreetMap tiles, warmed up in CSS) and MonShop pins.
+Components/MapView owns one of these; pages talk to it through `map_view.engine`. Pins and popups are drawn by Leaflet
+from small HTML strings (the engine's own drawing), everything around the map is Forms."""
 import anvil.js
 from anvil.js import window
 
-from . import ui, state
+from . import fmt, state
 
 # CARTO's free basemaps now need an API key, so we use the standard OpenStreetMap tiles.
 TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -20,44 +22,32 @@ def pin_html(place, dim=False, pending=False):
     cls += " dim"
   if pending:
     cls += " pending"
-  return f'<div class="ms-pin {cls}"><span class="e">{ui.esc(place.get("emoji") or "🛍️")}</span>{badges}</div>'
+  return f'<div class="ms-pin {cls}"><span class="e">{fmt.esc(place.get("emoji") or "🛍️")}</span>{badges}</div>'
 
 
 class MapView(object):
-  def __init__(self, height="420px", center=None, zoom=15, scroll_zoom=True, classes="", on_click=None, el=None):
-    """Either an Anvil component (self.component, starts on 'show') or, with el=, a map drawn straight into an
-    existing, visible DOM element."""
+  def __init__(self, el, center=None, zoom=15, scroll_zoom=True, on_click=None):
+    """Draws into the DOM element `el` once start() is called (the component's show event: Leaflet needs the
+    element on the page). Calls made before that are queued."""
     self.center = list(center or state.DEMO_CENTER)
     self.zoom = zoom
     self.scroll_zoom = scroll_zoom
-    self.on_click = on_click
-    self.map = None
+    self.on_click = state.loose(on_click)
+    self.map = state.loose(None)  # a Leaflet map once start() ran
     self.layers = {}
     self.markers = {}
     self._queue = []
     self._dom = el
-    if el is not None:
-      self.component = None
-      self._on_show()
-      return
-    style = f"height:{height}" if height else ""
-    self.component = ui.H(f'<div class="ms-map {classes}" style="{style}"></div>')
-    self.component.add_event_handler("show", self._on_show)
 
-  def _el(self):
-    if self._dom is not None:
-      return self._dom
-    return ui.dom(self.component).querySelector(".ms-map")
-
-  def _on_show(self, **e):
+  def start(self):
     if self.map is not None:
       window.setTimeout(lambda: self.map.invalidateSize(), 150)
       return
     L = getattr(window, "L", None)
     if L is None:
-      self._el().innerHTML = '<div class="ms-empty">🗺️ The map couldn\'t load. Check your connection and reload.</div>'
+      self._dom.innerHTML = '<div class="ms-empty">🗺️ The map couldn&rsquo;t load. Check your connection and reload.</div>'
       return
-    self.map = L.map(self._el(), {"scrollWheelZoom": self.scroll_zoom, "zoomControl": True})
+    self.map = L.map(self._dom, {"scrollWheelZoom": self.scroll_zoom, "zoomControl": True})
     self.map.setView(self.center, self.zoom)
     # OSM answers "403 Access blocked" to tile requests without a Referer, so always send our origin.
     L.tileLayer(TILES, {"attribution": ATTRIBUTION, "maxZoom": 19,
@@ -204,7 +194,7 @@ def locate(on_found, on_fail=None, quiet=False):
 
   def err(e):
     if not quiet:
-      ui.toast("Couldn't get your location. Check your browser's location permission.", True)
+      state.toast("Couldn't get your location. Check your browser's location permission.", "error")
     if on_fail:
       on_fail()
 

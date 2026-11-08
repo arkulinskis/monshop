@@ -1,0 +1,43 @@
+<anvil-form layout="MonShop.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ms-page">
+      <div class="cn-hero">
+        <h1>The Shopkeepers' Council: MonShop is built with shopkeepers, not on them.</h1>
+        <p>Every shop and restaurant on MonShop gets a vote. Suggest what we should build next, vote on other
+          ideas, and see exactly where each one stands. The top-voted ideas go to the front of the queue.</p>
+        <div class="cn-princ">
+          <div>🚫 No pay-to-rank. Ever.</div>
+          <div>📸 Your photos stay yours</div>
+          <div>📈 Your numbers, shown to you first</div>
+          <div>🗳️ One shop, one vote per idea</div>
+        </div>
+      </div>
+      <div class="sk-grid cn-grid">
+        <div>
+          <div class="ms-section-title first"><h2>Ideas &amp; roadmap</h2></div>
+          <anvil-component type="RepeatingPanel" name="ideas_panel" prop:item_template="MonShop.Items.IdeaRow"></anvil-component>
+          <div class="ms-empty" anvil:name="empty_box"><span class="big" aria-hidden="true">💡</span><h3>No ideas yet</h3><p class="muted">Be the first to suggest one.</p></div>
+          <div class="ms-empty" anvil:name="error_box"><span class="big" aria-hidden="true">📡</span><h3>Couldn't load the Council</h3><p class="muted">Try again in a moment.</p></div>
+        </div>
+        <div>
+          <div class="ms-card" anvil:name="suggest_box">
+            <h3>💡 Suggest an idea</h3>
+            <p class="small muted">What would make MonShop better for your shop? Be specific: "let me…", "show me…".</p>
+            <label class="ms-field"><span class="lbl">Your idea</span>
+              <anvil-component type="TextBox" name="title_box" prop:placeholder="e.g. Let me post opening hours for holidays" prop:role='["ms-input"]'></anvil-component></label>
+            <label class="ms-field"><span class="lbl">Why it matters <span class="faint">(optional)</span></span>
+              <anvil-component type="TextArea" name="body_box" prop:role='["ms-textarea"]'></anvil-component></label>
+            <anvil-component type="Button" name="post_button" prop:text="Send to the Council" prop:role='["ms-btn", "plum", "block"]'></anvil-component>
+          </div>
+          <div class="ms-card" anvil:name="join_box">
+            <h3>🏪 Run a shop or restaurant?</h3>
+            <p class="small muted">Open your place on MonShop (free, two minutes) and you get a vote on every idea here,
+              plus you can suggest your own.</p>
+            <a class="ms-btn teal block" href="#sell">Open my shop</a>
+            <p class="small muted mt">Shoppers: you can read along. The Council is where shopkeepers steer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

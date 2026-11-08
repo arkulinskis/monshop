@@ -1,0 +1,27 @@
+<div class="ui ms-dlg">
+  <div class="sk-compose">
+    <anvil-component type="Label" name="heading" prop:role='["ms-modal-title"]' prop:text="Almost posted"></anvil-component>
+    <div class="prev" anvil:dom-node="prev"><div class="prev-emo" anvil:dom-node="prev_emo" aria-hidden="true"></div></div>
+    <label class="ms-field"><span class="lbl">What is it? <span class="faint">(optional)</span></span>
+      <anvil-component type="TextBox" name="title_box" prop:placeholder="e.g. Rhubarb galette" prop:role='["ms-input"]'></anvil-component>
+    </label>
+    <label class="ms-field"><span class="lbl">Price <span class="faint">(optional: leave empty to keep them curious)</span></span>
+      <span class="ms-money"><span class="cur" anvil:dom-node="cur" aria-hidden="true">€</span>
+        <anvil-component type="TextBox" name="price_box" prop:placeholder="—" prop:role='["ms-input", "big"]'></anvil-component></span>
+    </label>
+    <anvil-component type="RepeatingPanel" name="units_panel" prop:item_template="MonShop.Items.Chip" prop:role='["ms-chips", "units"]'></anvil-component>
+    <div class="cmp-special">
+      <anvil-component type="CheckBox" name="special_box" prop:text="✨ Special / just in" prop:role='["ms-check"]'></anvil-component>
+      <span class="small muted">Gets a sparkle on the map and a spot at the top of your shelf.</span>
+    </div>
+    <details class="cmp-note" anvil:dom-node="note_part"><summary class="small">＋ Add a note</summary>
+      <anvil-component type="TextArea" name="note_box" prop:placeholder="Sizes, flavours, 'only 3 left'…" prop:role='["ms-textarea"]'></anvil-component>
+    </details>
+    <anvil-component type="Label" name="message" prop:role='["msg-error"]' prop:visible="false"></anvil-component>
+    <anvil-component type="Button" name="save_button" prop:text="📣 Post it" prop:role='["ms-btn", "teal", "lg", "block"]'></anvil-component>
+    <div class="row between cmp-foot">
+      <anvil-component type="Button" name="cancel_button" prop:text="Cancel" prop:role='["ms-link", "teal-t"]'></anvil-component>
+      <anvil-component type="Button" name="delete_button" prop:text="🗑 Delete post" prop:role='["ms-link", "bad-t"]'></anvil-component>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="sk-item">
+  <button type="button" class="shelf-btn" anvil:on-dom:click="self.edit_click">
+    <anvil-component type="MonShop.Components.Tile" name="tile"></anvil-component>
+  </button>
+  <div class="ms-cap"><div class="t" anvil:dom-node="title"></div><div class="s" anvil:dom-node="sub"></div></div>
+  <div class="acts">
+    <anvil-component type="Button" name="edit_button" prop:text="✏️" prop:role='["sk-act"]' prop:tooltip="Edit"></anvil-component>
+    <anvil-component type="Button" name="pin_button" prop:text="📌" prop:role='["sk-act"]' prop:tooltip="Pin to top"></anvil-component>
+    <anvil-component type="Button" name="special_button" prop:text="✨" prop:role='["sk-act"]' prop:tooltip="Special"></anvil-component>
+    <anvil-component type="Button" name="sold_button" prop:text="🚫" prop:role='["sk-act"]' prop:tooltip="Sold out"></anvil-component>
+    <anvil-component type="Button" name="delete_button" prop:text="🗑" prop:role='["sk-act"]' prop:tooltip="Delete"></anvil-component>
+  </div>
+</div>

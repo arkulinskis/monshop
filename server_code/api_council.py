@@ -30,7 +30,7 @@ def list_ideas():
       "by_emoji": (place["emoji"] if place else None) or "🏪", "voted": rid(i) in mine,
       "mine": u is not None and author == u,
     })
-  out.sort(key=lambda d: (STATUS_ORDER.get(d["status"], 9), -d["votes"]))
+  out.sort(key=lambda d: (STATUS_ORDER.get(d["status"], 9), -(d["votes"] or 0)))  # type: ignore
   return {"ideas": out, "can_vote": _is_keeper(u), "signed_in": u is not None}
 
 

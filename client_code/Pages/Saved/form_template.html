@@ -1,0 +1,22 @@
+<anvil-form layout="MonShop.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ms-page narrow">
+      <h1 class="page-h1">Your places: saved &amp; 5% off</h1>
+      <p class="muted lead-p">Every place you bookmark gives you 5% off. At the counter, tap <b>Show my pass</b> and tell them today's word.</p>
+      <div class="mt">
+        <div class="ms-card center sv-join" anvil:name="join_box">
+          <div class="sv-join-e" aria-hidden="true">🔖</div>
+          <h2>Your regular spots, with 5% off</h2>
+          <p class="muted">Make a free account, bookmark the shops and cafés you love, and get 5% off at each of them. It takes 20 seconds.</p>
+          <anvil-component type="Button" name="join_button" prop:text="Create my free account" prop:role='["ms-btn", "lg"]'></anvil-component>
+          <div class="small muted mt">Just looking? <a href="#map">The map</a> works without an account.</div>
+        </div>
+        <anvil-component type="RepeatingPanel" name="list_panel" prop:item_template="MonShop.Items.SavedRow"></anvil-component>
+        <div class="ms-empty" anvil:name="error_box"><span class="big" aria-hidden="true">📡</span><h3>Couldn't load your places</h3><p class="muted">Check your connection and try again.</p></div>
+        <div class="ms-empty" anvil:name="empty_box"><span class="big" aria-hidden="true">🗺️</span><h3>No bookmarks yet</h3>
+          <p class="muted">Open a shop on the map and tap 🔖 Bookmark. You'll get 5% off there from then on.</p>
+          <a class="ms-btn" href="#map">Find places near me</a></div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

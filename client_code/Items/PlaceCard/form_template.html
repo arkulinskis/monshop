@@ -1,0 +1,15 @@
+<div class="mp-cell">
+  <a class="mp-card" anvil:name="card">
+    <div class="pic" anvil:dom-node="pic"><span anvil:dom-node="pic_emo" aria-hidden="true"></span><span class="n" anvil:dom-node="count"></span></div>
+    <div class="grow">
+      <h4 anvil:dom-node="name"></h4>
+      <div class="meta"><span anvil:dom-node="meta"></span><b class="fresh-n" anvil:dom-node="fresh"></b></div>
+      <div class="special" anvil:dom-node="special"></div>
+      <div class="hits" anvil:name="hits_box">
+        <anvil-component type="RepeatingPanel" name="hits_panel" prop:item_template="MonShop.Items.Hit" prop:role='["contents"]'></anvil-component>
+        <div class="hit faint" anvil:dom-node="more"></div>
+      </div>
+    </div>
+    <span class="ms-pill ink save5" anvil:dom-node="saved">🔖 5%</span>
+  </a>
+</div>

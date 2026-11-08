@@ -1,0 +1,74 @@
+<anvil-form layout="MonShop.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ms-page">
+      <div class="ms-empty" anvil:name="locked_box"><span class="big" aria-hidden="true">🔒</span><h3>Admins only</h3>
+        <p class="muted">This page is for MonShop admins. Sign in with an admin account to see it.</p>
+        <a class="ms-btn" href="#map">Back to the map</a></div>
+      <div anvil:name="body">
+        <div class="ad-head">
+          <h1>MonShop admin: the front desk</h1>
+          <a class="ms-btn ghost sm" href="#map">🗺️ Back to the map</a>
+        </div>
+        <anvil-component type="RepeatingPanel" name="kpi_panel" prop:item_template="MonShop.Items.Kpi" prop:role='["ad-kpis"]'></anvil-component>
+        <div class="ad-toggles">
+          <label class="ad-toggle" anvil:name="toggle_shop">
+            <span class="e" aria-hidden="true">🛍️</span>
+            <span class="grow"><b>Auto-approve new shops</b><br><span class="small muted" anvil:dom-node="sub_shop"></span></span>
+            <anvil-component type="CheckBox" name="auto_shop" prop:role='["ms-switch"]'></anvil-component>
+          </label>
+          <label class="ad-toggle" anvil:name="toggle_food">
+            <span class="e" aria-hidden="true">🍽️</span>
+            <span class="grow"><b>Auto-approve new restaurants, cafés &amp; bars</b><br><span class="small muted" anvil:dom-node="sub_food"></span></span>
+            <anvil-component type="CheckBox" name="auto_food" prop:role='["ms-switch"]'></anvil-component>
+          </label>
+        </div>
+        <anvil-component type="RepeatingPanel" name="tabs_panel" prop:item_template="MonShop.Items.Chip" prop:role='["ms-chips", "ad-tabs"]'></anvil-component>
+
+        <div anvil:name="queue_tab">
+          <div class="row between mb" anvil:name="queue_head">
+            <anvil-component type="Label" name="queue_count" prop:role='["muted-inline"]'></anvil-component>
+            <anvil-component type="Button" name="approve_all_button" prop:text="✓ Approve all" prop:role='["ms-btn", "ok", "sm"]'></anvil-component>
+          </div>
+          <anvil-component type="RepeatingPanel" name="queue_panel" prop:item_template="MonShop.Items.AdminPlaceRow"></anvil-component>
+          <div class="ms-empty" anvil:name="queue_empty"><span class="big" aria-hidden="true">🎉</span><h3>Nothing waiting</h3>
+            <p class="muted">New shops and restaurants that need approval show up here.</p></div>
+        </div>
+
+        <div anvil:name="places_tab">
+          <div class="row mb ad-search">
+            <anvil-component type="TextBox" name="search_box" prop:placeholder="Search name, address, owner email, posts…" prop:role='["ms-input", "grow-box"]'></anvil-component>
+            <anvil-component type="Button" name="search_button" prop:text="Search" prop:role='["ms-btn", "ink"]'></anvil-component>
+          </div>
+          <anvil-component type="RepeatingPanel" name="status_panel" prop:item_template="MonShop.Items.Chip" prop:role='["ms-chips", "mb"]'></anvil-component>
+          <anvil-component type="Label" name="places_count" prop:role='["small-muted"]'></anvil-component>
+          <anvil-component type="RepeatingPanel" name="places_panel" prop:item_template="MonShop.Items.AdminPlaceRow"></anvil-component>
+          <div class="ms-empty" anvil:name="places_empty"><span class="big" aria-hidden="true">🔎</span><h3>No places match</h3></div>
+        </div>
+
+        <div anvil:name="reports_tab">
+          <anvil-component type="RepeatingPanel" name="reports_panel" prop:item_template="MonShop.Items.ReportRow"></anvil-component>
+          <div class="ms-empty" anvil:name="reports_empty"><span class="big" aria-hidden="true">🕊️</span><h3>No open reports</h3>
+            <p class="muted">When a shopper reports a post, it shows up here.</p></div>
+        </div>
+
+        <div anvil:name="council_tab">
+          <p class="muted">Set a status and reply. Shopkeepers see your reply on the Council page.</p>
+          <anvil-component type="RepeatingPanel" name="ideas_panel" prop:item_template="MonShop.Items.AdminIdeaRow" prop:role='["ad-ideas"]'></anvil-component>
+          <div class="ms-empty" anvil:name="ideas_empty"><span class="big" aria-hidden="true">💡</span><h3>No ideas yet</h3>
+            <p class="muted">Shopkeepers' suggestions land here.</p></div>
+        </div>
+
+        <div anvil:name="demo_tab">
+          <div class="ms-card">
+            <h3>🧪 Demo street (Old Riga)</h3>
+            <anvil-component type="Label" name="demo_text" prop:role='["muted-p"]'></anvil-component>
+            <div class="row">
+              <anvil-component type="Button" name="seed_button" prop:text="Add the demo street" prop:role='["ms-btn", "ghost"]'></anvil-component>
+              <anvil-component type="Button" name="clear_button" prop:text="Remove all demo places" prop:role='["ms-btn", "ghost", "bad"]'></anvil-component>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>
