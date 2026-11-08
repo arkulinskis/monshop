@@ -102,7 +102,7 @@ class Shop(ShopTemplate):
         members = fmt.plural(n, "member") if n else "Be the first member"
         self.five_title.text = "You're a member here" if saved else "Bookmark for 5% off"
         self.five_text.text = ("Show your live pass at the counter for 5% off." if saved
-                               else "Bookmark %s and get 5% off every visit. %s." % (self.p["name"], members))
+                               else "Bookmark %s and get 5%% off every visit. %s." % (self.p["name"], members))
         self.pass_button.visible = saved
         self.unsave_button.visible = saved
         self.save_button.visible = not saved

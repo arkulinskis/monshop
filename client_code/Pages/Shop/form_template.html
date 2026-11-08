@@ -2,7 +2,7 @@
   <anvil-block slot="content">
     <div class="ms-page">
       <div class="ms-empty" anvil:name="loading_box"><span class="big" aria-hidden="true">🏪</span><p>Opening the door…</p></div>
-      <div class="ms-empty" anvil:name="closed_box"><span class="big" aria-hidden="true">🚪</span><h3>This door is closed</h3>
+      <div class="ms-empty" anvil:name="closed_box"><span class="big" aria-hidden="true">🚪</span><h2>This door is closed</h2>
         <anvil-component type="Label" name="closed_text" prop:role='["muted-p"]' prop:text="We couldn't find that place. It may have left MonShop."></anvil-component>
         <a class="ms-btn" href="#map">Back to the map</a></div>
       <div anvil:name="body">
@@ -23,7 +23,7 @@
               <div class="s-t" anvil:dom-node="special_text"></div></div></div>
             <div class="ms-section-title first"><h2>On the shelf</h2><span class="muted small" anvil:dom-node="shelf_count"></span></div>
             <anvil-component type="RepeatingPanel" name="shelf_panel" prop:item_template="MonShop.Items.ShelfTile" prop:role='["sp-shelf"]'></anvil-component>
-            <div class="ms-empty" anvil:name="shelf_empty"><span class="big" aria-hidden="true">📸</span><h3>Nothing posted yet</h3>
+            <div class="ms-empty" anvil:name="shelf_empty"><span class="big" aria-hidden="true">📸</span><h2>Nothing posted yet</h2>
               <p class="muted">Pop in and see for yourself. Then nudge them to post!</p></div>
           </div>
           <div class="sp-side">

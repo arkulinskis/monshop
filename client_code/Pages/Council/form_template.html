@@ -16,12 +16,12 @@
         <div>
           <div class="ms-section-title first"><h2>Ideas &amp; roadmap</h2></div>
           <anvil-component type="RepeatingPanel" name="ideas_panel" prop:item_template="MonShop.Items.IdeaRow"></anvil-component>
-          <div class="ms-empty" anvil:name="empty_box"><span class="big" aria-hidden="true">💡</span><h3>No ideas yet</h3><p class="muted">Be the first to suggest one.</p></div>
-          <div class="ms-empty" anvil:name="error_box"><span class="big" aria-hidden="true">📡</span><h3>Couldn't load the Council</h3><p class="muted">Try again in a moment.</p></div>
+          <div class="ms-empty" anvil:name="empty_box"><span class="big" aria-hidden="true">💡</span><h2>No ideas yet</h2><p class="muted">Be the first to suggest one.</p></div>
+          <div class="ms-empty" anvil:name="error_box"><span class="big" aria-hidden="true">📡</span><h2>Couldn't load the Council</h2><p class="muted">Try again in a moment.</p></div>
         </div>
         <div>
           <div class="ms-card" anvil:name="suggest_box">
-            <h3>💡 Suggest an idea</h3>
+            <h2 class="card-h">💡 Suggest an idea</h2>
             <p class="small muted">What would make MonShop better for your shop? Be specific: "let me…", "show me…".</p>
             <label class="ms-field"><span class="lbl">Your idea</span>
               <anvil-component type="TextBox" name="title_box" prop:placeholder="e.g. Let me post opening hours for holidays" prop:role='["ms-input"]'></anvil-component></label>
@@ -30,7 +30,7 @@
             <anvil-component type="Button" name="post_button" prop:text="Send to the Council" prop:role='["ms-btn", "plum", "block"]'></anvil-component>
           </div>
           <div class="ms-card" anvil:name="join_box">
-            <h3>🏪 Run a shop or restaurant?</h3>
+            <h2 class="card-h">🏪 Run a shop or restaurant?</h2>
             <p class="small muted">Open your place on MonShop (free, two minutes) and you get a vote on every idea here,
               plus you can suggest your own.</p>
             <a class="ms-btn teal block" href="#sell">Open my shop</a>

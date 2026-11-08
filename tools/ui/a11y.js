@@ -9,8 +9,8 @@
    Resolves to {ok, log}. Keep log lines ASCII (the Windows console). */
 (async function () {
   /*AXE*/
-  const PUBLIC = ['#landing', '#auth', '#auth/signup'];  // add the app's public pages
-  const MEMBER = ['#home', '#profile'];                  // add every member page
+  const PUBLIC = ['#welcome', '#map', '#fresh', '#saved', '#sell', '#council'];  // public pages
+  const MEMBER = ['#map', '#saved', '#sell', '#council'];  // member pages (sign-in: see below)
   const log = [], bad = [];
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   async function until(fn, what, ms) {

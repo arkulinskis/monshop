@@ -10,8 +10,8 @@
    The master copy is APP_MAKER/design/design.js; apps copy it into tools/ui/. Add the app's pages to PUBLIC/MEMBER.
    Resolves to {ok, log}. Keep log lines ASCII (the Windows console). */
 (async function () {
-  const PUBLIC = ['#landing', '#auth/signup'];  // add the app's public pages
-  const MEMBER = ['#home', '#profile'];         // add every member page
+  const PUBLIC = ['#welcome', '#map', '#fresh', '#saved', '#sell', '#council'];  // public pages
+  const MEMBER = ['#saved', '#sell', '#council'];  // member pages
   const OVERUSED = ['inter', 'roboto', 'plus jakarta sans', 'geist', 'space grotesk', 'fraunces'];
   const phone = window.innerWidth < 600;
   const log = [], bad = [];

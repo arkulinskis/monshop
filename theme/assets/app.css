@@ -773,6 +773,12 @@ anvil-dropzone { display: contents; }
 .anvil-role-ms-chips > div { display: flex; flex-wrap: wrap; gap: 8px; }
 .anvil-role-ms-chips.anvil-role-scroll > div { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
 .anvil-role-ms-chips.anvil-role-scroll > div::-webkit-scrollbar { display: none; }
+.anvil-role-ms-chips > div > * { flex: none; }
+.anvil-role-ms-chips .anvil-button-text, .anvil-role-ms-chips button span { white-space: nowrap; }
+.anvil-role-ms-chips.anvil-role-scroll { min-width: 0; max-width: 100%; }
+/* grid columns must not grow to fit a nowrap chip row (the row scrolls instead) */
+.mp-side, .mp-mapwrap, .sk-grid > *, .sp-grid > * { min-width: 0; }
+@media (max-width: 860px) { .mp { grid-template-columns: minmax(0, 1fr); } }
 .anvil-role-ms-chips.anvil-role-mb > div, .anvil-role-fr-chips > div, .anvil-role-sk-switch > div { margin-bottom: 16px; }
 .anvil-role-units > div { margin: -4px 0 14px; }
 .anvil-role-sp-until > div { margin-top: 10px; }
@@ -927,3 +933,9 @@ anvil-dropzone { display: contents; }
   .lp-strip .run, .ms-pass .stripes, .sk-snap.pulse .cam, .ms-pass .live::before, .ms-confetti span { animation: none; }
   .ms-confetti { display: none; }
 }
+
+/* names people type use Figtree (Fraunces misdraws Latvian macrons): the special's text too */
+.sp-special .s-t { font-family: var(--body); font-weight: 800; letter-spacing: -.02em; }
+.ms-empty h2 { font-size: 21px; margin-bottom: 6px; }
+.lp-step h2 { font-size: 21px; }
+.sk-council .card-h { margin: 6px 0 4px; }

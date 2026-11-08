@@ -61,6 +61,10 @@ class AuthDialog(AuthDialogTemplate):
     def switch_button_click(self, **event_args):
         self._set_mode("login" if self._mode == "signup" else "signup")
 
+    @handle("close_button", "click")
+    def close_button_click(self, **event_args):
+        self.raise_event("x-close-alert", value=False)
+
     @handle("forgot_button", "click")
     def forgot_button_click(self, **event_args):
         self._set_mode("reset")

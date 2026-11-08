@@ -18,18 +18,18 @@
           </div>
         </div>
         <div class="lp-steps mt-lg">
-          <div class="lp-step"><span class="n" aria-hidden="true">1</span><span class="e" aria-hidden="true">✍️</span><h3>Name &amp; type</h3>
+          <div class="lp-step"><span class="n" aria-hidden="true">1</span><span class="e" aria-hidden="true">✍️</span><h2>Name &amp; type</h2>
             <p class="muted">Shop or restaurant? Pick what you sell from a list of icons.</p></div>
-          <div class="lp-step"><span class="n" aria-hidden="true">2</span><span class="e" aria-hidden="true">📍</span><h3>Where you are</h3>
+          <div class="lp-step"><span class="n" aria-hidden="true">2</span><span class="e" aria-hidden="true">📍</span><h2>Where you are</h2>
             <p class="muted">Tap "I'm at my shop" or type the address. Drag the pin to your door.</p></div>
-          <div class="lp-step"><span class="n" aria-hidden="true">3</span><span class="e" aria-hidden="true">📸</span><h3>Snap something</h3>
+          <div class="lp-step"><span class="n" aria-hidden="true">3</span><span class="e" aria-hidden="true">📸</span><h2>Snap something</h2>
             <p class="muted">Your phone camera opens. Take the photo, add a price if you like. Done.</p></div>
         </div>
         <p class="center muted mt-lg">Questions or ideas? The <a href="#council">Shopkeepers' Council</a> is where shopkeepers steer MonShop.</p>
       </div>
 
       <div class="ms-empty" anvil:name="loading_box"><span class="big" aria-hidden="true">🏪</span><p>Unlocking the shop…</p></div>
-      <div class="ms-empty" anvil:name="locked_box"><span class="big" aria-hidden="true">🔒</span><h3>We couldn't open that shop</h3>
+      <div class="ms-empty" anvil:name="locked_box"><span class="big" aria-hidden="true">🔒</span><h2>We couldn't open that shop</h2>
         <p class="muted">It may belong to someone else, or it was closed.</p><a class="ms-btn teal" href="#sell">Back to my shop</a></div>
 
       <div anvil:name="dash">
@@ -74,7 +74,7 @@
               <span class="small muted" anvil:dom-node="top_count"></span></div>
             <div class="sk-meter" role="progressbar" aria-label="How full your shelf is" anvil:dom-node="meter"><i anvil:dom-node="meter_fill"></i></div>
             <anvil-component type="RepeatingPanel" name="shelf_panel" prop:item_template="MonShop.Items.ShelfItem" prop:role='["sk-shelf"]'></anvil-component>
-            <div class="ms-empty" anvil:name="shelf_empty"><span class="big" aria-hidden="true">📸</span><h3>Your shelf is empty</h3>
+            <div class="ms-empty" anvil:name="shelf_empty"><span class="big" aria-hidden="true">📸</span><h2>Your shelf is empty</h2>
               <p class="muted">Tap the big green button and photograph the first thing a customer sees when they walk in.</p></div>
             <p class="small muted mt">📌 Pinned posts stay at the top and never retire. When you post a 21st thing, your oldest
               unpinned post retires to keep the shelf fresh.</p>
@@ -94,7 +94,7 @@
             </div>
             <div class="sk-council">
               <div class="sk-council-e" aria-hidden="true">🗳️</div>
-              <h3>You steer MonShop</h3>
+              <h2 class="card-h">You steer MonShop</h2>
               <p class="small" anvil:dom-node="council_text"></p>
               <a class="ms-btn plum sm" href="#council">Open the Shopkeepers' Council</a>
             </div>
