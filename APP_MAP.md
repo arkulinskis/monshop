@@ -26,8 +26,8 @@ around them with an offset instead of whole files.
 ## Notes
 
 <!-- NOTES: hand-written, kept when the map is regenerated -->
-- **Native Forms since 2026-11-08** (branch `forms`, folder `monshop-forms`); the classic version (HTML strings built in
-  Python, `client_code/Main` router) is on master until the user merges. Same server code, tables and `#addresses`.
+- **Native Forms since 2026-11-08** (branch `forms`, folder `monshop-forms`); merged to master the same day (the classic
+  version with HTML strings built in Python lives on only in the retired folder `monshop`). Same server code, tables and `#addresses`.
 - **Routing**: `router._pick()` maps `#welcome #map[/words] #fresh #shop/<id> #saved #sell #sell/new #sell/<id>
   #sell/<id>/settings #council #admin` to a page (no PAGES table; bare `#` = welcome for visitors, map for members;
   unknown = map). `#sell` decides: visitor = pitch (Pages/Sell), no place yet = Pages/Onboard, else the dashboard.
