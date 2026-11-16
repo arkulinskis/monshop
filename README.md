@@ -20,7 +20,7 @@ with this repo's URL). If Anvil asks to update the database schema, accept it: t
 The first time anyone opens the map, a **demo street in Old Riga** (13 live places, 2 waiting for approval, a few
 Council ideas) is created so the app never looks empty. Remove it any time from **Admin → Demo data**.
 
-**Admin access:** the account that signs up with `arkulinskis@gmail.com` is an admin automatically
+**Admin access:** the account that signs up with your admin email (App Secret `admin_emails`) is an admin automatically
 (`ADMIN_EMAILS` in `server_code/common.py`).
 
 ## How the 5% works

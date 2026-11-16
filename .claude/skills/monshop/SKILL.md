@@ -76,7 +76,7 @@ pending/approved/rejected/closed, lat/lng, special, counters, search_text, is_de
 price, pinned, sold_out, active), `bookmarks`, `visits` (first pass shown per day = a visit), `reports`, `ideas`,
 `idea_votes`, `settings` (auto-approve flags).
 
-**Admins:** `arkulinskis@gmail.com` (ADMIN_EMAILS) is admin automatically. Pending places email the admin;
+**Admins:** your admin email (App Secret `admin_emails`) (ADMIN_EMAILS) is admin automatically. Pending places email the admin;
 approvals/rejections email the owner (Email service).
 
 ## How things are done here

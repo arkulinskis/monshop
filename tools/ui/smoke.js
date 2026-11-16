@@ -165,8 +165,8 @@
 
     // ---- admin (ADMIN_EMAILS in server_code/common.py): sign up the first time, sign in after that
     const adminPw = 'Ms-smoke-adm-93Kx-7q';
-    if (!(await authDialog('signup', 'Admin Tester', 'arkulinskis@gmail.com', adminPw))) {
-      if (!(await authDialog('login', '', 'arkulinskis@gmail.com', adminPw))) throw new Error('admin sign-in failed');
+    if (!(await authDialog('signup', 'Admin Tester', 'admin@example.com', adminPw))) {
+      if (!(await authDialog('login', '', 'admin@example.com', adminPw))) throw new Error('admin sign-in failed');
     }
     await open('#admin', /front desk/, () => $$('.anvil-role-ad-tabs button').length >= 5);
     for (const t of [/All places/, /Reports/, /Council/, /Demo data/, /Approvals/]) {

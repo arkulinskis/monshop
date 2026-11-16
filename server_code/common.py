@@ -9,9 +9,10 @@ import anvil.tz
 import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
+from . import AdminAccess
 
 # Anyone signing in with one of these emails is an admin.
-ADMIN_EMAILS = {"arkulinskis@gmail.com"}
+ADMIN_EMAILS = AdminAccess.ADMIN_EMAILS  # from the App Secret `admin_emails`
 
 MAX_ITEMS = 20          # a shop's "top 20": the shelf, not a catalogue
 MAX_PLACES_PER_USER = 3
