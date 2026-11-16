@@ -18,7 +18,8 @@ PROJECT = HERE.parents[1]
 _tmp = pathlib.Path(tempfile.mkdtemp())
 shutil.copytree(PROJECT / "server_code", _tmp / "app")
 (_tmp / "app" / "__init__.py").write_text("")
-os.environ["ANVIL_APP_YAML"] = str(PROJECT / "anvil.yaml")
+if (PROJECT / "anvil.yaml").exists():  # git apps; source-layout apps take the schema from tools/sync_to_anvil.py
+    os.environ["ANVIL_APP_YAML"] = str(PROJECT / "anvil.yaml")
 sys.path[:0] = [str(HERE / "mock"), str(_tmp)]
 import anvil.secrets  # noqa: E402
 import anvil.server  # noqa: E402
@@ -56,6 +57,7 @@ def person(email, admin=False, **kw):
 # ---- the secret decides who may be promoted; the address itself is nowhere in the code
 anvil.secrets.SECRETS.pop("admin_emails", None)
 boss = person("Boss@Example.com")
+anvil.server.get_app_origin = lambda *a: "https://app-test.anvil.app"  # hosted, whatever the mock says
 assert not AdminAccess.may_promote(boss), "no secret -> nobody is promoted automatically"
 anvil.secrets.SECRETS["admin_emails"] = "boss@example.com, second@example.com"
 assert "boss@example.com" in AdminAccess.ADMIN_EMAILS and len(AdminAccess.ADMIN_EMAILS) == 2
@@ -66,12 +68,14 @@ squatter["confirmed_email"] = True
 assert AdminAccess.may_promote(squatter), "a confirmed address counts"
 assert not AdminAccess.may_promote(person("ana@example.com")), "unlisted -> no"
 squatter["confirmed_email"] = False
-anvil.server.ORIGIN[0] = "http://localhost:3031"
+_origin = anvil.server.get_app_origin
+anvil.server.get_app_origin = lambda *a: "http://localhost:3031"
 assert AdminAccess.may_promote(squatter), "the local App Server (Docker UI tests) promotes email + password accounts"
-anvil.server.ORIGIN[0] = "https://app-test.anvil.app"
+anvil.server.get_app_origin = lambda *a: "https://app-test.anvil.app"
 assert not AdminAccess.may_promote(squatter)
+import re  # noqa: E402
 for f in (PROJECT / "server_code").rglob("*.py"):
-    assert "@gmail.com" not in f.read_text(encoding="utf-8"), "a real address is written in %s: use the secret" % f.name
+    assert not re.search(r"ADMIN_EMAILS\s*=\s*[\[{(]\s*['\"][^'\"]*@", f.read_text(encoding="utf-8")),         "an admin address is written in %s: use the admin_emails App Secret" % f.name
 
 # ---- the report: admins only
 admin = person("boss2@example.com", admin=True)

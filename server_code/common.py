@@ -91,7 +91,7 @@ def ensure_defaults(u):
   if not u["display_name"]:
     base = (u["email"] or "Friend").split("@")[0]
     ch["display_name"] = base.replace(".", " ").replace("_", " ").title()[:40]
-  admin = bool(u["email"] and u["email"].strip().lower() in ADMIN_EMAILS)
+  admin = AdminAccess.may_promote(u)
   if admin and not u["is_admin"]:
     ch["is_admin"] = True
   if ch:
