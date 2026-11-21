@@ -30,12 +30,22 @@
             <span class="big" aria-hidden="true">🏙️</span>
             <anvil-component type="Label" name="none_title" prop:role='["empty-title"]'></anvil-component>
             <p class="muted">MonShop grows one street at a time. Know a shop or café that deserves a spot?</p>
+            <anvil-component type="Label" name="ghost_hint" prop:role='["gh-hint"]' prop:visible="false"></anvil-component>
             <div class="ms-stack-narrow">
               <anvil-component type="Button" name="invite_button" prop:text="💌 Copy an invite for them" prop:role='["ms-btn", "block"]'></anvil-component>
               <anvil-component type="Button" name="wider2_button" prop:text="Search 3× wider" prop:role='["ms-btn", "ghost", "block"]'></anvil-component>
               <anvil-component type="Button" name="demo_button" prop:text="👀 Peek at the demo street (Riga)" prop:role='["ms-btn", "ghost", "block"]'></anvil-component>
               <a class="ms-btn teal block" href="#sell">🏪 I run a shop here</a>
             </div>
+          </div>
+          <div class="gh-sec" anvil:name="ghost_sec">
+            <details class="gh-box" anvil:dom-node="ghost_box" anvil:on-dom:toggle="self.ghost_toggle">
+              <summary><span class="gh-sum"><span aria-hidden="true">👻</span> <span anvil:dom-node="ghost_title">Not on MonShop yet</span></span>
+                <span class="gh-sub" anvil:dom-node="ghost_sub">Real shops nearby. Ask them to join, or claim yours.</span></summary>
+              <anvil-component type="RepeatingPanel" name="ghost_panel" prop:item_template="MonShop.Items.GhostCard" prop:role='["gh-list"]'></anvil-component>
+              <div class="gh-more" anvil:dom-node="ghost_more"></div>
+            </details>
+            <div class="osm-attr">Places not on MonShop yet: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</div>
           </div>
         </div>
       </aside>

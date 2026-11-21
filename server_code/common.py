@@ -10,6 +10,7 @@ import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
 from . import AdminAccess
+from . import hours as hours_mod
 
 # Anyone signing in with one of these emails is an admin.
 ADMIN_EMAILS = AdminAccess.ADMIN_EMAILS  # from the App Secret `admin_emails`
@@ -66,6 +67,25 @@ def by_id(table, token):
     return table.get_by_id(token)
   except Exception:
     return None
+
+
+def col(row, name, default=None):
+  """A column that may not exist yet in the live database (new columns wait for the Schema Mismatch accept)."""
+  try:
+    v = row[name]
+  except Exception:
+    return default
+  return default if v is None else v
+
+
+def set_col(row, name, value):
+  """Write a new column on its own, so a missing column never breaks the rest of a save. True if it worked."""
+  try:
+    row[name] = value
+    return True
+  except Exception as e:
+    print("column %s not written: %s" % (name, e))
+    return False
 
 
 def clean(s, limit=200):
@@ -209,8 +229,10 @@ def special_of(p):
   return {"text": text, "until": until}
 
 
-def place_dict(p, dist=None, owner_view=False):
+def place_dict(p, dist=None, owner_view=False, tz=None):
+  """tz = the viewer's time zone (from the browser), used when the place has none saved."""
   sp = special_of(p)
+  week = hours_mod.week_of(p)
   d = {
     "id": rid(p), "name": p["name"] or "Unnamed place", "kind": p["kind"] or "shop",
     "category": p["category"] or "", "emoji": p["emoji"] or ("🍽️" if p["kind"] == "restaurant" else "🛍️"),
@@ -220,6 +242,9 @@ def place_dict(p, dist=None, owner_view=False):
     "color": p["color"] or "g1", "special": sp["text"] if sp else "", "special_until": sp["until"] if sp else None,
     "bookmarks": p["bookmarks"] or 0, "status": p["status"] or "pending",
     "last_post": p["last_post"], "is_demo": bool(p["is_demo"]),
+    "open_state": hours_mod.open_state(p, tz, week=week) if week else None,
+    "hours_week": hours_mod.week_to_store(week), "hours_line": hours_mod.summary(week) if week else (p["hours"] or ""),
+    "osm_ref": col(p, "osm_ref", ""),
   }
   if dist is not None:
     d["dist"] = round(dist, 2)
@@ -227,6 +252,8 @@ def place_dict(p, dist=None, owner_view=False):
     d.update({
       "reject_reason": p["reject_reason"] or "", "views": p["views"] or 0, "passes_shown": p["passes_shown"] or 0,
       "created": p["created"], "special_raw": p["special"] or "", "special_until_raw": p["special_until"],
+      "hours_saved": hours_mod.week_to_store(hours_mod.week_from_store(col(p, "hours_week"))),
+      "hours_today": col(p, "hours_today"), "tz": col(p, "tz", ""),
     })
   return d
 

@@ -6,6 +6,24 @@ from ._anvil_designer import ShopTemplate
 from ... import catalog, fmt, state
 
 
+DAYS = ("mo", "tu", "we", "th", "fr", "sa", "su")
+DAY_NAMES = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+
+def _t(hhmm):
+    """'07:30' -> '7:30' (the week table reads like people write hours)."""
+    h, m = str(hhmm).split(":")
+    return "%d:%s" % (int(h), m)
+
+
+def _day_text(ranges):
+    if not ranges:
+        return "Closed"
+    if len(ranges) == 1 and ranges[0][0] == "00:00" and ranges[0][1] in ("24:00", "00:00"):
+        return "Open 24 hours"
+    return ", ".join("%s–%s" % (_t(a), _t(b)) for a, b in ranges)
+
+
 class Shop(ShopTemplate):
     """#shop/<id>: one shop or restaurant as a shopper sees it: the hero, today's special, the shelf (top 20), the 5%
     bookmark (and the live pass once bookmarked), contact details and a small map. Owners see a "Manage" bar."""
@@ -25,7 +43,7 @@ class Shop(ShopTemplate):
             return
         self._shown = True
         try:
-            res = anvil.server.call("get_place", self.place_id)
+            res = anvil.server.call("get_place", self.place_id, state.tz())
         except Exception as e:
             self.loading_box.visible = False
             self.closed_box.visible = True
@@ -78,8 +96,7 @@ class Shop(ShopTemplate):
         # contact
         state.text(d["address"], p.get("address") or "Address coming soon")
         d["directions"].setAttribute("href", fmt.directions_url(p))
-        state.show(d["hours_row"], bool(p.get("hours")))
-        state.text(d["hours"], p.get("hours") or "")
+        self._render_hours()
         state.show(d["phone_row"], bool(p.get("phone")))
         state.text(d["phone"], p.get("phone") or "")
         d["phone"].setAttribute("href", "tel:" + (p.get("phone") or ""))
@@ -95,6 +112,39 @@ class Shop(ShopTemplate):
         if p.get("lat") is not None:
             mv = self.map_view.setup(center=(p["lat"], p["lng"]), zoom=16, scroll_zoom=False)
             mv.add_place(p)
+
+    def _render_hours(self):
+        """Open now: the pill in the hero, and the week's hours as a table with today in bold (or the text as typed)."""
+        p, d = self.p, self.dom_nodes
+        fmt.open_pill(d["oc"], p)
+        week = p.get("hours_week")
+        st = p.get("open_state") or {}
+        state.show(d["hours_row"], bool(week or p.get("hours")))
+        state.show(d["week"], bool(week))
+        state.show(d["hours"], not week)
+        state.text(d["hours"], p.get("hours") or "")
+        body = d["week_body"]
+        body.innerHTML = ""
+        if not week:
+            return
+        today = st.get("today") or ""
+        for key, name in zip(DAYS, DAY_NAMES):
+            tr = window.document.createElement("tr")
+            if key == today:
+                tr.className = "today"
+            for txt in (name, _day_text(week.get(key) or [])):
+                td = window.document.createElement("td")
+                td.textContent = txt
+                tr.appendChild(td)
+            body.appendChild(tr)
+        if st.get("override") == "closed":
+            note = window.document.createElement("tr")
+            note.className = "note"
+            td = window.document.createElement("td")
+            td.setAttribute("colspan", "2")
+            td.textContent = "Closed today, back to normal tomorrow."
+            note.appendChild(td)
+            body.appendChild(note)
 
     def _render_five(self):
         n = self.p.get("bookmarks") or 0
@@ -142,7 +192,7 @@ class Shop(ShopTemplate):
 
     @handle("share_button", "click")
     def share_button_click(self, **event_args):
-        link = window.location.href
+        link = fmt.share_url(self.place_id)
         nav = window.navigator
         try:
             if nav.share:

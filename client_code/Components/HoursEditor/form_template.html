@@ -1,0 +1,10 @@
+<div class="he">
+  <p class="small muted he-help">Shoppers see <b>Open</b>, <b>Closing soon</b> or <b>Closed</b> on your pin and page. A closing time
+    after midnight (like 01:00) is fine. Days left empty count as closed.</p>
+  <anvil-component type="RepeatingPanel" name="rows_panel" prop:item_template="MonShop.Items.HoursRow" prop:role='["he-rows"]'></anvil-component>
+  <div class="row he-acts">
+    <anvil-component type="Button" name="copy_button" prop:text="Copy Monday to Tue–Fri" prop:role='["ms-btn", "ghost", "sm"]'></anvil-component>
+    <anvil-component type="Button" name="clear_button" prop:text="Clear all" prop:role='["ms-link", "small"]'></anvil-component>
+  </div>
+  <anvil-component type="Label" name="note" prop:role='["small-muted"]' prop:visible="false"></anvil-component>
+</div>

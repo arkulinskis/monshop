@@ -32,9 +32,12 @@
         </div>
 
         <div class="ms-card mt">
-          <h2 class="card-h">Opening hours &amp; contact</h2>
-          <label class="ms-field"><span class="lbl">Opening hours</span>
-            <anvil-component type="TextBox" name="hours_box" prop:placeholder="e.g. Mon–Sat 9:00–18:00, Sun closed" prop:role='["ms-input"]'></anvil-component></label>
+          <h2 class="card-h">🕐 Opening hours</h2>
+          <anvil-component type="MonShop.Components.HoursEditor" name="hours_editor"></anvil-component>
+        </div>
+
+        <div class="ms-card mt">
+          <h2 class="card-h">Contact</h2>
           <label class="ms-field"><span class="lbl">Phone</span>
             <anvil-component type="TextBox" name="phone_box" prop:type="tel" prop:role='["ms-input"]'></anvil-component></label>
           <label class="ms-field"><span class="lbl">Website or Instagram</span>

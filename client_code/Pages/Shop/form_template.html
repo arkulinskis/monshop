@@ -11,7 +11,7 @@
         <div class="sp-hero" anvil:name="hero">
           <div class="bg" anvil:dom-node="hero_bg"></div><div class="shade" anvil:dom-node="hero_shade"></div>
           <div class="in">
-            <div class="row sp-pills"><span class="ms-pill" anvil:dom-node="kind_pill"></span><span class="ms-pill sun" anvil:dom-node="status_pill"></span></div>
+            <div class="row sp-pills"><span class="ms-pill" anvil:dom-node="kind_pill"></span><span class="ms-pill sun" anvil:dom-node="status_pill"></span><span class="ms-oc big" anvil:dom-node="oc"></span></div>
             <h1 class="nm" anvil:dom-node="name"></h1>
             <div class="tag" anvil:dom-node="tag"></div>
           </div>
@@ -39,7 +39,8 @@
             </div>
             <div class="ms-card sp-info">
               <div class="r"><span class="i" aria-hidden="true">📍</span><span><span anvil:dom-node="address"></span><br><a target="_blank" rel="noopener" anvil:dom-node="directions">Get directions →</a></span></div>
-              <div class="r" anvil:dom-node="hours_row"><span class="i" aria-hidden="true">🕐</span><span anvil:dom-node="hours"></span></div>
+              <div class="r" anvil:dom-node="hours_row"><span class="i" aria-hidden="true">🕐</span><span class="grow"><span anvil:dom-node="hours"></span>
+                <table class="sp-week" aria-label="Opening hours" anvil:dom-node="week"><tbody anvil:dom-node="week_body"></tbody></table></span></div>
               <div class="r" anvil:dom-node="phone_row"><span class="i" aria-hidden="true">📞</span><a anvil:dom-node="phone"></a></div>
               <div class="r" anvil:dom-node="web_row"><span class="i" aria-hidden="true">🌐</span><a target="_blank" rel="noopener" anvil:dom-node="web"></a></div>
               <p class="sp-about" anvil:dom-node="about"></p>

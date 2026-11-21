@@ -16,6 +16,10 @@ description: Context, workflow and recipes for MonShop (monshop.ca, folder monsh
   answer the **Shopkeepers' Council** (feature ideas + votes).
 - A **demo street in Old Riga** (13 live places, 2 pending, Council ideas) is created on first map open; Admin -> Demo
   data removes it.
+- **Open now** (2026-11-20): pills, the Open now chip, grey closed pins, the week table, weekly hours in Shop details,
+  the dashboard's Today card (Closed today / Open until / Back to normal). **Not on MonShop yet**: OpenStreetMap ghost
+  pins + list, wishes, "I run this place" claims (`#sell/new/osm/<type>/<id>`), Admin -> Wishes. **Shop web pages**
+  `/s/<id>` + `/shops` and the window poster `#sell/<id>/poster`.
 
 **Where it lives:**
 - Folder `C:\Users\arkvi\Documents\CLAUDE\monshop-forms\` = the git clone of **github.com/arkulinskis/monshop**, branch
@@ -72,9 +76,27 @@ theme/assets/    monshop.js (window.ms: photo shrinking, accent/typo/wildcard se
 ```
 
 **Tables** (all server-only): `users` (+ display_name, is_admin, legal_*), `places` (status
-pending/approved/rejected/closed, lat/lng, special, counters, search_text, is_demo), `items` (photo + thumb media,
-price, pinned, sold_out, active), `bookmarks`, `visits` (first pass shown per day = a visit), `reports`, `ideas`,
-`idea_votes`, `settings` (auto-approve flags).
+pending/approved/rejected/closed, lat/lng, special, counters, search_text, is_demo; since 2026-11-20 osm_ref,
+hours_week, hours_today, tz), `items` (photo + thumb media, price, pinned, sold_out, active), `bookmarks`, `visits`
+(first pass shown per day = a visit), `reports`, `ideas`, `idea_votes`, `settings` (auto-approve flags, osm_live
+throttle, ofm_tiles), `osm_cache` (OpenStreetMap places per 0.01-degree cell), `wishes`, `page_hits`.
+
+**Opening hours** (`server_code/hours.py`): `parse_hours(text)` reads typed and OpenStreetMap hours into a week of
+minute ranges (a close at or before the opening runs past midnight); `hours_week` stores `{"mo": [["07:30",
+"18:00"]], ...}`; `open_state(place, viewer_tz)` uses the place's `tz` (saved from the shopkeeper's browser; demo
+places Europe/Riga; else the viewer's tz that `get_map_data`/`get_place`/`get_dashboard` take) and `hours_today`
+(`{day, mode: closed|until, close}`, only valid on that local date). Unreadable text -> None -> no pill, ever.
+
+**Not on MonShop yet** (`server_code/api_osm.py`): Overpass first (named shop/food, no brand tag), OpenFreeMap z14
+vector tiles (`poi` layer, decoded in pure Python; planetiler feature id = osm id * 10 + type) when Overpass fails,
+cached per cell (14 days, tiles 3), 20 live fetches a minute, 10-minute backoff after an Overpass failure, [] on any
+error. Ghosts matching an approved place (same osm_ref, or 35 m + similar name) are hidden. Show "(c) OpenStreetMap
+contributors" wherever ghosts or claimed OSM details appear.
+
+**Shop pages** (`server_code/shop_pages.py`, `@anvil.server.route`): `/s/<id>` (approved only, 404 page otherwise;
+demo = noindex + note, never on /shops), `/s/<id>/cover.jpg`, `/s/<id>/i/<item>.jpg`, `/shops`. `?src=qr` = a
+poster scan; bots and link previews aren't counted (page_hits). The poster's QR encoder is theme/assets/ms-qr.js
+(qrcode-generator 1.4.4, MIT), loaded by Pages/Poster only.
 
 **Admins:** your admin email (App Secret `admin_emails`) (ADMIN_EMAILS) is admin automatically. Pending places email the admin;
 approvals/rejections email the owner (Email service).
@@ -106,6 +128,12 @@ approvals/rejections email the owner (Email service).
 - **Restyle:** tokens at the top of app.css, fonts in head_html, spinner in theme.css, `LEGAL_THEME` in startup.py.
 
 ## Gotchas
+
+- New columns are read with `common.col()` and written with `common.set_col()` so the live app keeps working before
+  the user accepts the Schema Mismatch. The local App Server's auto-migrate drops some of several new columns added to
+  one table at once: restart (`ui_test.py --restart`) until `docker logs` stops saying "nonexistent column".
+- `get_saved` returns `{places, joined}` (since 2026-11-20), not a list.
+- Python %-format strings with "5%" need "5%%" (shop_pages.py once answered 500 for that).
 
 - **Fraunces misdraws macrons** (Latvian a/e/i/u with a bar): names people type (shops, items, specials, ideas) use
   Figtree via `.nm`, `.sp-special .s-t` and friends. Put any new user-typed heading in `.nm`.

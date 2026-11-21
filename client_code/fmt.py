@@ -133,6 +133,32 @@ def directions_url(place):
     return "https://www.google.com/maps/dir/?api=1&destination=%s,%s" % (place.get("lat"), place.get("lng"))
 
 
+SITE = "https://monshop.ca"
+
+
+def share_url(pid, src=None):
+    """The shop's own web page (server_code/shop_pages.py): https://monshop.ca/s/<id> (the local test server uses its
+    own address, so links work there too). src="qr" marks poster scans."""
+    from anvil.js import window
+    host = str(window.location.hostname or "")
+    base = str(window.location.origin) if host in ("localhost", "127.0.0.1") else SITE
+    return "%s/s/%s%s" % (base, pid, ("?src=" + src) if src else "")
+
+
+def open_pill(node, place):
+    """Fill an "Open · closes 18:00" pill (an anvil:dom-node) from place["open_state"]; hidden when we can't say."""
+    st = place.get("open_state")
+    for t in ("open", "soon", "closed"):
+        node.classList.remove(t)
+    if not st or not st.get("label"):
+        node.style.display = "none"
+        return False
+    node.style.display = ""
+    node.classList.add(st.get("tone") or "closed")
+    node.textContent = st["label"]
+    return True
+
+
 def plural(n, one, many=None):
     return "%d %s" % (n, one if n == 1 else (many or one + "s"))
 

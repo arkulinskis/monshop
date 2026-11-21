@@ -236,9 +236,105 @@ window.ms = (function () {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  /* ---------------------------------------------------------- window poster (Pages/Poster) */
+  var loaded = {};
+  function loadScript(src) {
+    if (!loaded[src]) {
+      loaded[src] = new Promise(function (ok, fail) {
+        var s = document.createElement('script');
+        s.src = src; s.async = true;
+        s.onload = function () { ok(true); };
+        s.onerror = function () { delete loaded[src]; fail(new Error('Could not load ' + src)); };
+        document.head.appendChild(s);
+      });
+    }
+    return loaded[src];
+  }
+
+  function qrModules(text) {
+    var q = window.qrcode(0, 'M');
+    q.addData(text, 'Byte');
+    q.make();
+    return q;
+  }
+
+  /* The QR code as one SVG path (crisp at any print size). Needs ms-qr.js (window.qrcode). */
+  function qrSvg(text, fg) {
+    if (!window.qrcode) return '';
+    var q = qrModules(text), n = q.getModuleCount(), m = 4, d = '';
+    for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) d += 'M' + (c + m) + ' ' + (r + m) + 'h1v1h-1z';
+    var size = n + 2 * m;
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + size + ' ' + size + '" shape-rendering="crispEdges" ' +
+      'role="img" aria-label="QR code for ' + text.replace(/"/g, '') + '"><rect width="' + size + '" height="' + size +
+      '" fill="#fff"/><path d="' + d + '" fill="' + (fg || '#211C33') + '"/></svg>';
+  }
+
+  function wrapLines(ctx, text, maxW) {
+    var words = String(text).split(/\s+/), lines = [], line = '';
+    words.forEach(function (w) {
+      var t = line ? line + ' ' + w : w;
+      if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t;
+    });
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+
+  /* A 1080x1920 picture for Instagram/WhatsApp stories: the shop's name, the 5% line and the QR code. o = {name,
+     emoji, url, short, line, kind, file}. Resolves to true once the download started. */
+  function posterPng(o) {
+    return new Promise(function (ok, fail) {
+      try {
+        var W = 1080, H = 1920, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+        var ctx = cv.getContext('2d'), accent = o.kind === 'restaurant' ? '#0F7D73' : '#EE5235';
+        var font = function (w, px) { return w + ' ' + px + 'px Figtree, system-ui, -apple-system, "Segoe UI", sans-serif'; };
+        ctx.fillStyle = '#FFF8EF'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = accent; ctx.fillRect(0, 0, W, 26);
+        for (var i = 0; i < 12; i++) { ctx.fillStyle = i % 2 ? '#FFF8EF' : accent; ctx.fillRect(i * 90, 26, 90, 54); }
+        ctx.textAlign = 'center'; ctx.fillStyle = '#211C33';
+        ctx.font = font(400, 150); ctx.fillText(o.emoji || '🛍️', W / 2, 330);
+        ctx.font = font(900, 92);
+        var lines = wrapLines(ctx, o.name, W - 140).slice(0, 3), y = 470;
+        lines.forEach(function (l) { ctx.fillText(l, W / 2, y); y += 104; });
+        ctx.font = font(700, 50); ctx.fillStyle = '#5B5670';
+        wrapLines(ctx, o.line, W - 180).forEach(function (l) { ctx.fillText(l, W / 2, y + 10); y += 62; });
+        var q = qrModules(o.url), n = q.getModuleCount(), box = 700, cell = Math.floor(box / (n + 8)), qs = cell * (n + 8);
+        var qx = (W - qs) / 2, qy = Math.max(y + 60, 900);
+        ctx.fillStyle = '#fff'; roundRect(ctx, qx - 24, qy - 24, qs + 48, qs + 48, 44); ctx.fill();
+        ctx.fillStyle = '#211C33';
+        for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) ctx.fillRect(qx + (c + 4) * cell, qy + (r + 4) * cell, cell, cell);
+        ctx.font = font(800, 46); ctx.fillStyle = '#211C33';
+        ctx.fillText('Scan to bookmark us', W / 2, qy + qs + 110);
+        ctx.font = font(600, 38); ctx.fillStyle = '#5B5670';
+        ctx.fillText(o.short || o.url, W / 2, qy + qs + 170);
+        var img = new Image();
+        img.onload = function () { ctx.drawImage(img, W / 2 - 150, H - 150, 64, 64); finish(); };
+        img.onerror = finish;
+        img.src = '_/theme/logo.svg';
+        function finish() {
+          ctx.textAlign = 'left'; ctx.font = font(900, 44); ctx.fillStyle = '#211C33';
+          ctx.fillText('MonShop', W / 2 - 70, H - 102);
+          cv.toBlob(function (blob) {
+            if (!blob) { fail(new Error('no picture')); return; }
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob); a.download = o.file || 'monshop-poster.png';
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+            ok(true);
+          }, 'image/png');
+        }
+      } catch (e) { fail(e); }
+    });
+  }
+
   return {
     prepareImage: prepareImage, fileOf: fileOf, setIndex: setIndex, search: search, highlight: highlight,
-    toast: toast, confetti: confetti, copy: copy, liveClock: liveClock, store: store, scrollTo: scrollTo, fold: fold
+    toast: toast, confetti: confetti, copy: copy, liveClock: liveClock, store: store, scrollTo: scrollTo, fold: fold,
+    loadScript: loadScript, qrSvg: qrSvg, posterPng: posterPng
   };
 })();
 

@@ -22,7 +22,19 @@ def pin_html(place, dim=False, pending=False):
     cls += " dim"
   if pending:
     cls += " pending"
+  st = place.get("open_state")
+  if st and not st.get("open"):
+    cls += " closed"  # Open now: closed places' pins are desaturated
   return f'<div class="ms-pin {cls}"><span class="e">{fmt.esc(place.get("emoji") or "🛍️")}</span>{badges}</div>'
+
+
+def ghost_html(ghost, emoji):
+  """A place that isn't on MonShop yet (OpenStreetMap): a grey outline pin with a faded emoji, and a 🙋 badge with the
+  number of neighbours who asked for it."""
+  n = ghost.get("wishes") or 0
+  badge = '<span class="badge wish">🙋%s</span>' % (n if n < 100 else "99+") if n else ""
+  return '<div class="ms-pin ghost%s"><span class="e">%s</span>%s</div>' % (" wished" if ghost.get("wished") else "",
+                                                                          fmt.esc(emoji), badge)
 
 
 class MapView(object):
@@ -36,6 +48,7 @@ class MapView(object):
     self.map = state.loose(None)  # a Leaflet map once start() ran
     self.layers = {}
     self.markers = {}
+    self.ghosts = {}
     self._queue = []
     self._dom = el
 
@@ -85,6 +98,8 @@ class MapView(object):
         self.layers[name].clearLayers()
       if name == "default":
         self.markers = {}
+      if name == "ghosts":
+        self.ghosts = {}
     self.when_ready(go)
 
   def add_place(self, place, popup_el=None, on_click=None, dim=False, layer="default", draggable=False, on_drag=None):
@@ -103,6 +118,20 @@ class MapView(object):
       m.addTo(self.layer(layer))
       if place.get("id"):
         self.markers[place["id"]] = m
+    self.when_ready(go)
+
+  def add_ghost(self, ghost, emoji, popup_el=None):
+    """A grey "not on MonShop yet" pin in its own layer (cleared with clear("ghosts")); below MonShop's own pins."""
+    def go():
+      L = window.L
+      icon = L.divIcon({"className": "ms-pin-wrap", "html": ghost_html(ghost, emoji), "iconSize": [30, 30],
+                        "iconAnchor": [15, 35], "popupAnchor": [0, -32]})
+      m = L.marker([ghost["lat"], ghost["lng"]], {"icon": icon, "riseOnHover": True, "zIndexOffset": -50,
+                                                  "keyboard": True, "title": ghost.get("name") or ""})
+      if popup_el is not None:
+        m.bindPopup(popup_el, {"maxWidth": 280, "minWidth": 250, "closeButton": False})
+      m.addTo(self.layer("ghosts"))
+      self.ghosts[ghost["ref"]] = m
     self.when_ready(go)
 
   def show_me(self, lat, lng):

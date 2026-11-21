@@ -8,8 +8,11 @@ from anvil.js import window
 from ._anvil_designer import MapPageTemplate
 from ... import catalog, fmt, mapkit, router, state
 
-FILTERS = [("all", "All"), ("shop", "🛍️ Shops"), ("restaurant", "🍽️ Food & drink"), ("special", "✨ Specials"),
-           ("fresh", "🆕 Fresh"), ("saved", "🔖 Saved")]
+FILTERS = [("all", "All"), ("open", "🟢 Open now"), ("shop", "🛍️ Shops"), ("restaurant", "🍽️ Food & drink"),
+           ("special", "✨ Specials"), ("fresh", "🆕 Fresh"), ("saved", "🔖 Saved")]
+GHOST_ZOOM = 14      # ghost pins (OpenStreetMap places not on MonShop yet) from this zoom in
+GHOST_LIST_MAX = 40  # the list shows the nearest ones; the map shows them all
+GHOST_AUTO = 5       # the ghosts start switched on when fewer MonShop places than this are in view
 
 
 def _km(a, b):
@@ -24,7 +27,9 @@ class MapPage(MapPageTemplate):
     """#map[/words] (Operate): the Leaflet map (Components/MapView) beside a searchable list of places. Search runs in
     the browser (window.ms.search in theme/assets/monshop.js: accent-blind, typo-tolerant, * and ? wildcards) over the
     places and their shelves loaded for the area; the map pins of non-matching places dim. Moving the map offers
-    "Search this area"; the first visit asks the browser where the person is (demo street in Riga otherwise)."""
+    "Search this area"; the first visit asks the browser where the person is (demo street in Riga otherwise).
+    Ghosts: from zoom 14, real shops that aren't on MonShop yet (server_code/api_osm.py) show as grey pins and in a
+    collapsed "Not on MonShop yet" list, with wishes and "I run this place". The ghost chip switches them on and off."""
 
     def __init__(self, query="", **properties):
         super().__init__(**properties)
@@ -34,6 +39,12 @@ class MapPage(MapPageTemplate):
         self.user_moved = False
         self._hot_id = None
         self._shown = False
+        self.ghosts = []
+        self.show_ghosts = state.loose(None)  # None = decide from how many MonShop places are in view
+        self._ghost_seq = 0
+        self._ghost_at = state.loose(None)    # (lat, lng) the ghosts were loaded for
+        self._ghost_timer = state.loose(None)
+        self._ghost_note = ""
         self.search_box.text = self.query
         state.set_control_attr(self.search_box, "aria-label", "Search shops and what's on their shelves")
         state.set_control_attr(self.search_box, "autocomplete", "off")
@@ -43,6 +54,9 @@ class MapPage(MapPageTemplate):
         state.live(self.count_label)
         self.filter_panel.add_event_handler("x-pick", self._pick_filter)
         self.list_panel.add_event_handler("x-hover", self._hover)
+        self.ghost_panel.add_event_handler("x-wish", lambda ref, **e: self._wish(ref))
+        self.ghost_panel.add_event_handler("x-claim", lambda ref, **e: self._claim(ref))
+        self.ghost_sec.visible = False
         self.nomatch_box.visible = False
         self.none_box.visible = False
         self._draw_filters()
@@ -85,7 +99,7 @@ class MapPage(MapPageTemplate):
 
     def load(self, lat, lng, radius):
         self.count_label.text = "Looking around…"
-        res = state.call("get_map_data", lat, lng, radius, quiet=True)
+        res = state.call("get_map_data", lat, lng, radius, state.tz(), quiet=True)
         if res is state.FAIL:
             self.count_label.text = "Couldn't load places. Check your connection."
             return
@@ -98,6 +112,7 @@ class MapPage(MapPageTemplate):
         self._index()
         self._draw_markers()
         self.render()
+        self._queue_ghosts(60)
 
     def _index(self):
         docs = []
@@ -126,6 +141,9 @@ class MapPage(MapPageTemplate):
             cells = ['<div class="t emo big %s">%s</div>' % (p.get("color") or "g1", e(p.get("emoji")))]
         ph = '<div class="ph %s">%s</div>' % ("one" if len(cells) == 1 else "", "".join(cells))
         special = '<div class="special">✨ %s</div>' % e(p["special"]) if p.get("special") else ""
+        st = p.get("open_state")
+        if st and st.get("label"):
+            special = '<div class="pop-oc"><span class="ms-oc %s">%s</span></div>' % (e(st.get("tone")), e(st["label"])) + special
         five = '<span class="ms-pill ink pop-five">5% for you</span>' if p.get("saved") else ""
         return ('<div class="ms-popup">%s<div class="bd"><h4>%s</h4><div class="small muted">%s · %s%s</div>%s'
                 '<div class="row pop-acts"><button type="button" class="ms-btn sm" data-act="open" data-arg="%s">Open</button>'
@@ -144,6 +162,7 @@ class MapPage(MapPageTemplate):
     def search_box_change(self, **event_args):
         self.query = (self.search_box.text or "").strip()
         self.render()
+        self._draw_ghosts()
 
     @handle("search_box", "pressed_enter")
     def search_box_pressed_enter(self, **event_args):
@@ -163,15 +182,29 @@ class MapPage(MapPageTemplate):
         self.set_query(event.currentTarget.getAttribute("data-q"))
 
     def _draw_filters(self):
-        self.filter_panel.items = [{"key": k, "label": t, "on": k == self.filter} for k, t in FILTERS]
+        chips = [{"key": k, "label": t, "on": k == self.filter} for k, t in FILTERS]
+        chips.append({"key": "ghosts", "label": "👻 Not on MonShop yet", "on": bool(self.show_ghosts),
+                      "roles": ["ms-chip", "gh-chip"]})
+        self.filter_panel.items = chips
 
     def _pick_filter(self, key, **event_args):
+        if key == "ghosts":
+            self.show_ghosts = not self.show_ghosts
+            self._draw_filters()
+            if self.show_ghosts and self.mv.view_info()[3] < GHOST_ZOOM:
+                state.toast("Zoom in on a street to see the shops that aren't on MonShop yet.")
+            self._draw_ghosts()
+            return
         self.filter = key or "all"
         self._draw_filters()
         self.render()
+        self._draw_ghosts()
 
     def _passes_filter(self, p):
         f = self.filter
+        if f == "open":
+            st = p.get("open_state")
+            return bool(st and st.get("open"))
         if f in ("shop", "restaurant"):
             return p.get("kind") == f
         if f == "special":
@@ -239,6 +272,9 @@ class MapPage(MapPageTemplate):
         state.view((lat, lng, zoom))
         if self.loaded is None:
             return
+        at = self._ghost_at
+        if (zoom >= GHOST_ZOOM and (at is None or _km((lat, lng), at) > 0.6)) or (zoom < GHOST_ZOOM and self.ghosts):
+            self._queue_ghosts(700)
         self.user_moved = True
         llat, llng, lrad = self.loaded
         far = _km((lat, lng), (llat, llng)) > lrad * 0.4
@@ -285,3 +321,119 @@ class MapPage(MapPageTemplate):
             state.toast("Invite copied. Paste it into a message to your favourite shop 💌")
         else:
             state.prompt("Copy this and send it to them:", initial=text, yes="Done")
+
+    # ------------------------------------------------------------ not on MonShop yet (OpenStreetMap ghosts)
+    def _queue_ghosts(self, ms):
+        """Load the ghosts a moment later (once for a burst of map moves): the page never waits for them."""
+        self._ghost_seq += 1
+        seq = self._ghost_seq
+        if self._ghost_timer is not None:
+            window.clearTimeout(self._ghost_timer)
+        self._ghost_timer = window.setTimeout(lambda: self._load_ghosts(seq), ms)
+
+    def _load_ghosts(self, seq):
+        self._ghost_timer = None
+        if seq != self._ghost_seq:
+            return
+        lat, lng, radius, zoom = self.mv.view_info()
+        if zoom < GHOST_ZOOM:
+            self.ghosts, self._ghost_at = [], None
+            self._ghost_note = "zoom"
+            self._draw_ghosts()
+            return
+        self._ghost_at = (lat, lng)
+        res = state.call("get_ghosts", lat, lng, min(1.5, max(0.4, radius)), state.tz(), quiet=True)
+        if seq != self._ghost_seq:
+            return  # the map moved on while we waited
+        self.ghosts = [] if res is state.FAIL else (res or [])
+        self._ghost_note = ""
+        if self.show_ghosts is None and self.ghosts:
+            in_view = len([p for p in self.places if (p.get("dist") or 0) <= max(radius, 0.5)])
+            self.show_ghosts = in_view < GHOST_AUTO
+            self._draw_filters()
+        self._draw_ghosts()
+
+    def _ghost_passes(self, g):
+        f = self.filter
+        if f in ("shop", "restaurant"):
+            return g.get("kind") == f
+        if f == "open":
+            return g.get("open_tone") in ("open", "soon")
+        if f in ("special", "fresh", "saved"):
+            return False
+        if self.query:
+            return str(window.ms.fold(self.query)).strip() in str(window.ms.fold(g.get("name") or ""))
+        return True
+
+    def _ghost_popup(self, g):
+        e = fmt.esc
+        from ...Items.GhostCard import wish_line
+        emoji = catalog.cat_emoji(g.get("cat"), g.get("kind") or "shop")
+        label = catalog.cat_label(g.get("cat")) or catalog.KIND_LABEL.get(g.get("kind"), "")
+        hours = g.get("open_label") or g.get("hours") or ""
+        n = g.get("wishes") or 0
+        return ('<div class="ms-popup gh-pop"><div class="bd"><div class="gh-tag">👻 Not on MonShop yet</div>'
+                '<h4>%s</h4><div class="small muted">%s %s · %s</div>%s%s'
+                '<div class="pop-acts col"><button type="button" class="ms-btn sm gh-wish%s" data-act="wish" data-arg="%s">%s</button>'
+                '<button type="button" class="ms-btn ghost sm" data-act="claim" data-arg="%s">🏪 I run this place</button></div>'
+                '<div class="osm-attr">&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" '
+                'rel="noopener">OpenStreetMap</a> contributors</div></div></div>'
+                % (e(g.get("name")), e(emoji), e(label), fmt.fmt_km(g.get("dist")),
+                   ('<div class="small gh-hours">🕐 %s</div>' % e(hours)) if hours else "",
+                   ('<div class="gh-wishes">%s</div>' % e(wish_line(n, g.get("wished")))) if n else "",
+                   " on" if g.get("wished") else "", e(g["ref"]),
+                   "🙋 You asked for them" if g.get("wished") else "🙋 I want them on MonShop", e(g["ref"])))
+
+    def _draw_ghosts(self):
+        self.mv.clear("ghosts")
+        shown = [g for g in self.ghosts if self._ghost_passes(g)] if self.show_ghosts else []
+        for g in shown:
+            el = self.mv.popup_el(self._ghost_popup(g), {"wish": self._wish, "claim": self._claim})
+            self.mv.add_ghost(g, catalog.cat_emoji(g.get("cat"), g.get("kind") or "shop"), popup_el=el)
+        self.ghost_sec.visible = bool(self.show_ghosts) and (bool(shown) or self._ghost_note == "zoom")
+        d = self.dom_nodes
+        if self._ghost_note == "zoom":
+            state.text(d["ghost_title"], "Not on MonShop yet")
+            state.text(d["ghost_sub"], "Zoom in on a street to see the real shops there that aren't on MonShop yet.")
+        else:
+            state.text(d["ghost_title"], "Not on MonShop yet (%d nearby)" % len(shown))
+            state.text(d["ghost_sub"], "Real shops and cafés from OpenStreetMap. Ask them to join, or claim yours.")
+        state.text(d["ghost_more"], ("The %d nearest are listed. The map shows all %d." % (GHOST_LIST_MAX, len(shown)))
+                   if len(shown) > GHOST_LIST_MAX else "")
+        self.ghost_panel.items = shown[:GHOST_LIST_MAX] if d["ghost_box"].open else []
+        self.ghost_hint.visible = bool(shown) and not self.places
+        if shown and not self.places:
+            self.ghost_hint.text = ("But %s near here %s on MonShop yet. Ask them to join: tap a grey pin, or open the "
+                                    "list below." % (fmt.plural(len(shown), "shop"), "isn't" if len(shown) == 1 else "aren't"))
+
+    def ghost_toggle(self, event):
+        if self.dom_nodes["ghost_box"].open:
+            self.ghost_panel.items = [g for g in self.ghosts if self._ghost_passes(g)][:GHOST_LIST_MAX]
+
+    def _ghost(self, ref):
+        return next((g for g in self.ghosts if g["ref"] == ref), None)
+
+    def _wish(self, ref):
+        g = self._ghost(ref)
+        if g is None:
+            return
+        if not state.logged_in():
+            if not state.ask_login("signup", reason="Make a free account so your wish for %s counts. We'll tell you when "
+                                                    "they join." % g["name"]):
+                return
+        res = state.call("toggle_wish", g)
+        if res is state.FAIL:
+            return
+        g["wished"], g["wishes"] = res["wished"], res["count"]
+        if res["wished"]:
+            state.confetti(["🙋", "✨", catalog.cat_emoji(g.get("cat"), g.get("kind") or "shop")])
+            state.toast("🙋 Wish saved. Your Saved page tells you when %s joins." % g["name"], "ok")
+        else:
+            state.toast("Wish removed.")
+        self._draw_ghosts()
+
+    def _claim(self, ref):
+        g = self._ghost(ref)
+        if g is not None:
+            state.claim(g)
+        router.go("sell/new/osm/%s" % ref)

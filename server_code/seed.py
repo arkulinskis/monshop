@@ -110,22 +110,30 @@ PLACES = [
     ("Elote", 4, "", "🌽", False, "")], "pending"),
 ]
 
+OPEN_NOW_NOTE = ("Shipped: every place shows Open, Closing soon or Closed, closed pins turn grey, and the map has an "
+                 "'Open now' filter. Set your weekly hours in Shop details, and tap 'Closed today' on your dashboard when "
+                 "life happens.")
+QR_NOTE = ("Shipped: your dashboard's 'Spread the word' card prints a window poster with a QR code that opens your own "
+           "MonShop web page. You see how many people scanned it each week.")
+
 IDEAS = [
-  ("Show 'open now' on the map pins", "Use our opening hours to grey out closed places at night.", 12, "building",
-   "Being built now. Hours will need a simple format first."),
+  ("Show 'open now' on the map pins", "Use our opening hours to grey out closed places at night.", 12, "shipped",
+   OPEN_NOW_NOTE),
   ("Let us post a 10-second video", "Some things don't photograph well: pouring coffee, sizzling pans.", 7, "planned",
-   "Planned after 'open now'. Video is heavier, so we'll keep it short."),
+   "Planned next. Video is heavier, so we'll keep it short."),
   ("Tell me which posts get the most taps", "So I know what to put in the window.", 9, "new", ""),
   ("Weekly email with my numbers", "Members, pass shows and views, every Monday.", 4, "new", ""),
   ("Let me pin my best posts to the top", "My bestseller shouldn't slide down when I post something new.", 6,
    "shipped", "Shipped: tap 📌 on any post on your shelf. Pinned posts also never retire."),
-  ("A QR sticker for my door", "'We're on MonShop: bookmark us for 5% off'.", 5, "new", ""),
+  ("A QR sticker for my door", "'We're on MonShop: bookmark us for 5% off'.", 5, "shipped", QR_NOTE),
 ]
 
 
 def ensure_seeded():
   """Seed the demo street the very first time anyone opens the map."""
   if get_setting("demo_seeded"):
+    if not get_setting("demo_ideas_v2"):
+      _update_demo_ideas()
     return
   if len(app_tables.places.search()):
     set_setting("demo_seeded", True)
@@ -133,8 +141,20 @@ def ensure_seeded():
   seed_demo()
 
 
+def _update_demo_ideas():
+  """Once: the demo Council promised 'open now' ("being built") and asked for a QR sticker. Both shipped (2026-11-20)."""
+  set_setting("demo_ideas_v2", True)
+  notes = {"Show 'open now' on the map pins": OPEN_NOW_NOTE, "A QR sticker for my door": QR_NOTE}
+  for i in app_tables.ideas.search(is_demo=True):
+    if i["title"] in notes and i["status"] != "shipped":
+      i.update(status="shipped", admin_note=notes[i["title"]])
+    elif i["title"] == "Let us post a 10-second video" and "after 'open now'" in (i["admin_note"] or ""):
+      i["admin_note"] = "Planned next. Video is heavier, so we'll keep it short."
+
+
 def seed_demo():
   set_setting("demo_seeded", True)
+  set_setting("demo_ideas_v2", True)
   if len(app_tables.places.search(is_demo=True)):
     return 0
   t0 = now()

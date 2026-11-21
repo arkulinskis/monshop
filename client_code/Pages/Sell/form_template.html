@@ -6,6 +6,7 @@
           <span class="deco" aria-hidden="true">🏪</span>
           <div class="who">For shopkeepers &amp; restaurateurs</div>
           <h1 class="pitch-h">Put your shop on the map in two minutes.</h1>
+          <anvil-component type="Label" name="claim_note" prop:role='["claim-note"]' prop:visible="false" prop:text="🏪 Claiming your place from the map? Make your free shopkeeper account first: its name, address and hours are filled in for you."></anvil-component>
           <ul>
             <li>Snap a photo of something you sell. Add a price, or don't. It's live.</li>
             <li>Keep just your top 20 things. No catalogue, no spreadsheets.</li>
@@ -70,6 +71,23 @@
                 <anvil-component type="Button" name="special_button" prop:text="Save" prop:role='["ms-btn", "sun"]'></anvil-component></div>
               <anvil-component type="RepeatingPanel" name="until_panel" prop:item_template="MonShop.Items.Chip" prop:role='["ms-chips", "sp-until"]'></anvil-component>
             </div>
+            <div class="ms-card sk-today mt">
+              <h2 class="card-h">🕐 Today</h2>
+              <div class="sk-today-now"><span class="ms-oc big" anvil:dom-node="today_oc"></span>
+                <span class="small muted" anvil:dom-node="today_text"></span></div>
+              <div class="row sk-today-acts" anvil:name="today_acts">
+                <anvil-component type="Button" name="closed_today_button" prop:text="🚪 Closed today" prop:role='["ms-btn", "ghost", "sm"]'></anvil-component>
+                <anvil-component type="Button" name="until_button" prop:text="⏰ Open until…" prop:role='["ms-btn", "ghost", "sm"]'></anvil-component>
+                <anvil-component type="Button" name="normal_button" prop:text="↩️ Back to normal" prop:role='["ms-btn", "ghost", "sm"]'></anvil-component>
+              </div>
+              <div class="row sk-until" anvil:name="until_row">
+                <label class="sk-until-l" for="ms-until-time">Today we close at</label>
+                <input type="time" id="ms-until-time" class="ms-time" anvil:dom-node="until_input">
+                <anvil-component type="Button" name="until_save_button" prop:text="Save" prop:role='["ms-btn", "sun", "sm"]'></anvil-component>
+              </div>
+              <p class="small muted sk-today-hint" anvil:dom-node="today_hint">Shoppers see it at once. It resets by itself at midnight.</p>
+              <a class="small sk-hours-link" anvil:name="hours_link"><span anvil:dom-node="hours_link_text">🗓️ Set your weekly opening hours</span></a>
+            </div>
             <div class="ms-section-title"><h2 anvil:dom-node="top_title">Your top 20</h2>
               <span class="small muted" anvil:dom-node="top_count"></span></div>
             <div class="sk-meter" role="progressbar" aria-label="How full your shelf is" anvil:dom-node="meter"><i anvil:dom-node="meter_fill"></i></div>
@@ -98,7 +116,17 @@
               <p class="small" anvil:dom-node="council_text"></p>
               <a class="ms-btn plum sm" href="#council">Open the Shopkeepers' Council</a>
             </div>
-            <anvil-component type="Button" name="share_button" prop:text="💌 Tell your customers you're on MonShop" prop:role='["ms-btn", "ghost", "block"]'></anvil-component>
+            <div class="ms-card sk-spread">
+              <h2 class="card-h">📣 Spread the word</h2>
+              <p class="small muted">Your shop's own web page: Google and AI assistants can read it, and it opens without the app.</p>
+              <a class="sk-link" target="_blank" rel="noopener" anvil:dom-node="page_link"></a>
+              <div class="row sk-spread-acts">
+                <anvil-component type="Button" name="share_button" prop:text="🔗 Share" prop:role='["ms-btn", "sm"]'></anvil-component>
+                <anvil-component type="Button" name="copy_button" prop:text="Copy link" prop:role='["ms-btn", "ghost", "sm"]'></anvil-component>
+                <a class="ms-btn teal sm" anvil:name="poster_link">🖨️ Window poster</a>
+              </div>
+              <div class="small sk-spread-stats" anvil:dom-node="spread_stats"></div>
+            </div>
           </div>
         </div>
       </div>

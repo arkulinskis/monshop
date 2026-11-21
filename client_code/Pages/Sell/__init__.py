@@ -16,9 +16,10 @@ class Sell(SellTemplate):
     Snap & post button (photo shrunk on the phone, then Dialogs/Composer), the top-20 shelf (Items/ShelfItem: edit,
     pin, special, sold out, delete), today's special, today's member word, numbers and the Council."""
 
-    def __init__(self, place_id=None, **properties):
+    def __init__(self, place_id=None, claim=None, **properties):
         super().__init__(**properties)
         self.place_id = place_id
+        self.claim = claim or state.stored("claim")
         self.data = state.loose(None)  # get_dashboard's reply
         self.place = state.loose({})
         self.items = state.loose([])
@@ -35,6 +36,8 @@ class Sell(SellTemplate):
         self.dom_nodes["gal_input"].addEventListener("change", self._picked)
         state.set_control_attr(self.special_box, "maxlength", "140")
         state.set_control_attr(self.special_box, "aria-label", "Today's special")
+        self.until_row.visible = False
+        self.claim_note.visible = bool(self.claim)
 
     @handle("", "show")
     def form_show(self, **event_args):
@@ -50,17 +53,26 @@ class Sell(SellTemplate):
     @handle("join_button", "click")
     def join_button_click(self, **event_args):
         if state.ask_login("signup", keeper=True):
-            router.go("sell/new")
+            self._after_sign_in("sell/new")
 
     @handle("login_button", "click")
     def login_button_click(self, **event_args):
         if state.ask_login("login", keeper=True):
+            self._after_sign_in(None)
+
+    def _after_sign_in(self, route):
+        claim = state.stored("claim")
+        if claim:
+            router.go("sell/new/osm/" + claim)  # the place they tapped "I run this place" on, before signing in
+        elif route:
+            router.go(route)
+        else:
             router.show()
 
     # ------------------------------------------------------------ dashboard
     def load(self):
         self.loading_box.visible = True
-        res = state.call("get_dashboard", self.place_id, quiet=True)
+        res = state.call("get_dashboard", self.place_id, state.tz(), quiet=True)
         self.loading_box.visible = False
         if res is None:
             router.go("sell/new")
@@ -97,6 +109,8 @@ class Sell(SellTemplate):
         state.text(n["council_text"], "%s shopkeeper ideas are being built right now, %s already shipped. Suggest the next "
                                       "one, or vote." % (d["council"]["building"], d["council"]["shipped"]))
         self._render_special()
+        self._render_today()
+        self._render_spread()
         self._render_shelf()
         if state.just_opened():
             state.confetti(["🏪", "🎉", "📸", "✨"])
@@ -167,6 +181,88 @@ class Sell(SellTemplate):
             self.place = res
             self._render_special()
             state.toast("Special cleared.")
+
+    # ------------------------------------------------------------ today (Open now)
+    def _render_today(self):
+        p, n = self.place, self.dom_nodes
+        has_hours = bool(p.get("hours_week"))
+        fmt.open_pill(n["today_oc"], p)
+        st = p.get("open_state") or {}
+        mode = (p.get("hours_today") or {}).get("mode") if st.get("override") else ""
+        if not has_hours:
+            state.text(n["today_text"], "Add your weekly hours and shoppers see Open or Closed on your pin and page."
+                       + ((" Right now they see your hours as typed: “%s”." % p["hours"]) if p.get("hours") else ""))
+        elif mode == "closed":
+            state.text(n["today_text"], "You're marked closed for today.")
+        elif mode == "until":
+            state.text(n["today_text"], "Today you close at %s." % (p.get("hours_today") or {}).get("close", ""))
+        else:
+            state.text(n["today_text"], p.get("hours_line") or "")
+        self.today_acts.visible = has_hours
+        self.normal_button.visible = bool(mode)
+        self.closed_today_button.visible = mode != "closed"
+        state.show(n["today_hint"], has_hours)
+        state.text(n["hours_link_text"], "🗓️ Change your weekly hours" if has_hours else "🗓️ Set your weekly opening hours")
+        state.set_attr(self.hours_link, "href", "#sell/%s/settings" % p["id"])
+        self.until_row.visible = False
+
+    def _set_today(self, mode, until=None):
+        res = state.call("set_today", self.place_id, mode, until, state.tz())
+        if res is state.FAIL:
+            return
+        self.place = res
+        self._render_today()
+        state.toast({"closed": "🚪 Marked closed for today. Back to normal tomorrow.",
+                     "until": "⏰ Saved. Shoppers see your new closing time.",
+                     "normal": "↩️ Back to your usual hours."}.get(mode, "Saved."), "ok")
+
+    @handle("closed_today_button", "click")
+    def closed_today_button_click(self, **event_args):
+        self._set_today("closed")
+
+    @handle("until_button", "click")
+    def until_button_click(self, **event_args):
+        self.until_row.visible = not self.until_row.visible
+        if self.until_row.visible:
+            inp = self.dom_nodes["until_input"]
+            if not inp.value:
+                inp.value = (self.place.get("open_state") or {}).get("closes") or "17:00"
+                if ":" not in inp.value:
+                    inp.value = "17:00"
+            getattr(inp, "focus")()
+
+    @handle("until_save_button", "click")
+    def until_save_button_click(self, **event_args):
+        t = str(self.dom_nodes["until_input"].value or "")
+        if not t:
+            state.toast("Pick the time you close today.", "error")
+            return
+        self._set_today("until", t)
+
+    @handle("normal_button", "click")
+    def normal_button_click(self, **event_args):
+        self._set_today("normal")
+
+    # ------------------------------------------------------------ spreading the word (shop page + poster)
+    def _render_spread(self):
+        n, st = self.dom_nodes, self.data["stats"]
+        url = fmt.share_url(self.place_id)
+        link = n["page_link"]
+        link.textContent = url.replace("https://", "").replace("http://", "")
+        link.setAttribute("href", url)
+        state.set_attr(self.poster_link, "href", "#sell/%s/poster" % self.place_id)
+        live = self.place.get("status") == "approved"
+        state.text(n["spread_stats"], ("📷 %s · 🔗 %s this week" % (fmt.plural(st.get("scans_week") or 0, "poster scan"),
+                                                                    fmt.plural(st.get("page_week") or 0, "page visit")))
+                   if live else "Your page goes live as soon as your shop is approved.")
+
+    @handle("copy_button", "click")
+    def copy_button_click(self, **event_args):
+        url = fmt.share_url(self.place_id)
+        if state.copy_text(url):
+            state.toast("Link copied 🔗 Paste it into your Instagram bio, Google profile or newsletter.")
+        else:
+            state.prompt("Copy your shop's link:", initial=url, yes="Done")
 
     # ------------------------------------------------------------ the shelf
     def _render_shelf(self):
@@ -267,8 +363,16 @@ class Sell(SellTemplate):
     # ------------------------------------------------------------ spreading the word
     @handle("share_button", "click")
     def share_button_click(self, **event_args):
-        link = window.location.origin + window.location.pathname + "#shop/%s" % self.place_id
+        link = fmt.share_url(self.place_id)
         text = "We're on MonShop! Bookmark %s and get 5%% off every visit: %s" % (self.place["name"], link)
+        nav = window.navigator
+        try:
+            if nav.share:
+                nav.share({"title": self.place["name"], "text": "We're on MonShop! Bookmark %s and get 5%% off every visit."
+                           % self.place["name"], "url": link})
+                return
+        except Exception:
+            pass
         if state.copy_text(text):
             state.toast("Copied! Paste it into your Instagram bio, newsletter or window sign.")
         else:

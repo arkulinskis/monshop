@@ -25,6 +25,7 @@ class PlaceCard(PlaceCardTemplate):
         d["name"].innerHTML = window.ms.highlight(name, q) if q else name
         state.text(d["meta"], "%s · %s" % (fmt.cat_line(p), fmt.fmt_km(p.get("dist"))))
         state.text(d["fresh"], (" · %d new" % p["fresh"]) if p.get("fresh") else "")
+        fmt.open_pill(d["oc"], p)
         state.text(d["special"], ("✨ " + p["special"]) if p.get("special") else "")
         state.show(d["special"], bool(p.get("special")))
         state.show(d["saved"], bool(p.get("saved")))

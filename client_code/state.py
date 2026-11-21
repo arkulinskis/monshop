@@ -26,7 +26,7 @@ from anvil.js import window
 FAIL = object()
 DEMO_CENTER = (56.9496, 24.1105)   # Old Riga: the demo street
 
-_state: dict = {"me": None, "loc": None, "view": None, "just_opened": False}
+_state: dict = {"me": None, "loc": None, "view": None, "just_opened": False, "claim": None, "tz": None}
 
 
 # ---------------------------------------------------------------- who is signed in
@@ -193,6 +193,35 @@ def view(value=None):
     if value is not None:
         _state["view"] = value
     return _state["view"]
+
+
+def tz():
+    """The browser's time zone ("America/Toronto"): places without a saved zone are shown in it."""
+    if _state["tz"] is None:
+        try:
+            _state["tz"] = str(window.Intl.DateTimeFormat().resolvedOptions().timeZone or "")
+        except Exception:
+            _state["tz"] = ""
+    return _state["tz"] or None
+
+
+def claim(value=None):
+    """The OpenStreetMap place someone tapped "I run this place" on (a ghost dict), kept for the claim form."""
+    if value is not None:
+        _state["claim"] = value
+    return _state["claim"]
+
+
+def stored(key, value=None):
+    """A small string kept in the browser (window.ms.store): '' clears it."""
+    try:
+        if value is None:
+            v = window.ms.store(key)
+            return str(v) if v else None
+        window.ms.store(key, value if value else None)
+    except Exception:
+        pass
+    return value
 
 
 # ---------------------------------------------------------------- DOM helpers

@@ -43,7 +43,7 @@ def update_me(data):
 # ---------------------------------------------------------------- map
 
 @anvil.server.callable
-def get_map_data(lat, lng, radius_km=4):
+def get_map_data(lat, lng, radius_km=4, tz=None):
   seed.ensure_seeded()
   u = anvil.users.get_user()
   near = places_near(lat, lng, radius_km)[:400]
@@ -60,7 +60,7 @@ def get_map_data(lat, lng, radius_km=4):
   for d, p in near:
     pid = rid(p)
     its = sorted(items_by.get(pid, []), key=shelf_sort_key)
-    pd = place_dict(p, d)
+    pd = place_dict(p, d, tz=tz)
     pd["about"] = (pd["about"] or "")[:400]
     pd["saved"] = pid in saved
     pd["n_items"] = len(its)
@@ -100,7 +100,7 @@ def get_fresh(lat, lng, radius_km=15, kind=None, specials=False):
 # ---------------------------------------------------------------- one place
 
 @anvil.server.callable
-def get_place(place_id):
+def get_place(place_id, tz=None):
   p = by_id(app_tables.places, place_id)
   if p is None:
     raise anvil.server.PermissionDenied("We couldn't find that place. It may have closed its MonShop page.")
@@ -112,7 +112,7 @@ def get_place(place_id):
   if not is_owner:
     p["views"] = (p["views"] or 0) + 1
   bm = app_tables.bookmarks.search(user=u, place=p) if u is not None else []
-  return {"place": place_dict(p), "items": [item_dict(it) for it in active_items(p)],
+  return {"place": place_dict(p, tz=tz), "items": [item_dict(it) for it in active_items(p)],
           "saved": len(bm) > 0, "is_owner": is_owner, "is_admin": is_admin, "discount": MEMBER_DISCOUNT}
 
 

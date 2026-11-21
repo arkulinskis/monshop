@@ -7,7 +7,8 @@ from ... import catalog, fmt, photos, router, state
 
 class ShopSettings(ShopSettingsTemplate):
     """#sell/<id>/settings: everything about the place itself: cover photo, name, tagline, about, kind and category,
-    address and pin, hours, phone, website, currency; and closing the place for good."""
+    address and pin, weekly opening hours (Components/HoursEditor -> set_hours, which powers "Open now"), phone,
+    website, currency; and closing the place for good."""
 
     def __init__(self, place_id=None, **properties):
         super().__init__(**properties)
@@ -17,7 +18,7 @@ class ShopSettings(ShopSettingsTemplate):
         self.locked_box.visible = False
         self.picker.on_change = self._picked
         self.dom_nodes["cover_input"].addEventListener("change", self._cover_picked)
-        for box, n in ((self.name_box, 80), (self.tagline_box, 120), (self.about_box, 1200), (self.hours_box, 200),
+        for box, n in ((self.name_box, 80), (self.tagline_box, 120), (self.about_box, 1200),
                        (self.phone_box, 40), (self.web_box, 200)):
             state.set_control_attr(box, "maxlength", n)
 
@@ -26,7 +27,7 @@ class ShopSettings(ShopSettingsTemplate):
         if self._shown:
             return
         self._shown = True
-        res = state.call("get_dashboard", self.place_id, quiet=True)
+        res = state.call("get_dashboard", self.place_id, state.tz(), quiet=True)
         self.loading_box.visible = False
         if res is state.FAIL or res is None:
             self.locked_box.visible = True
@@ -49,7 +50,7 @@ class ShopSettings(ShopSettingsTemplate):
         self.about_box.text = p.get("about") or ""
         self.picker.setup(p["kind"], p.get("category"))
         self.address.setup(p.get("address"), p.get("lat"), p.get("lng"), p["kind"], p.get("emoji"))
-        self.hours_box.text = p.get("hours") or ""
+        self.hours_editor.setup(p.get("hours_week"), "" if p.get("hours_week") else (p.get("hours") or ""))
         self.phone_box.text = p.get("phone") or ""
         self.web_box.text = p.get("website") or ""
         self.currency_box.items = catalog.CURRENCIES
@@ -65,15 +66,21 @@ class ShopSettings(ShopSettingsTemplate):
             self.err.text, self.err.visible = "Pick what you mostly sell.", True
             return
         addr = self.address.value()
+        week, problem = self.hours_editor.value()
+        if problem:
+            self.err.text, self.err.visible = problem, True
+            return
         kind, cat = self.picker.kind, self.picker.cat
         data = {"name": (self.name_box.text or "").strip(), "tagline": (self.tagline_box.text or "").strip(),
                 "about": (self.about_box.text or "").strip(), "kind": kind, "category": cat,
-                "emoji": catalog.cat_emoji(cat, kind), "hours": (self.hours_box.text or "").strip(),
+                "emoji": catalog.cat_emoji(cat, kind), "tz": state.tz(),
                 "phone": (self.phone_box.text or "").strip(), "website": (self.web_box.text or "").strip(),
                 "currency": self.currency_box.selected_value, "address": addr["address"], "lat": addr["lat"],
                 "lng": addr["lng"]}
         done = state.busy(self.save_button, "Saving…")
         res = state.call("update_place", self.place_id, data)
+        if res is not state.FAIL and (week is not None or self.p.get("hours_week")):  # unreadable old text stays
+            res = state.call("set_hours", self.place_id, week, state.tz())
         done()
         if res is state.FAIL:
             return

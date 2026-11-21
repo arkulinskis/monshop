@@ -5,7 +5,10 @@
     #saved                 bookmarks + passes        #sell                 my shop (pitch / first-time setup / dashboard)
     #sell/new              open another place        #sell/<id>            that place's dashboard
     #sell/<id>/settings    shop details              #council              the Shopkeepers' Council
+    #sell/<id>/poster      the window QR poster      #sell/new/osm/node/123  claim a place from OpenStreetMap
     #admin                 admin front desk
+A claim opened while signed out shows the shopkeeper pitch and is remembered (browser storage "claim") until the
+person has signed in. Every shop also has a plain web page outside the app: /s/<id> (server_code/shop_pages.py).
 The bare address opens #welcome for visitors and #map for signed-in people. Unknown addresses open the map.
 Links in templates are plain <a href="#fresh">; code calls router.go("shop/123_456").
 Signing in happens in a dialog (state.ask_login), so pages decide themselves what visitors see.
@@ -65,9 +68,18 @@ def _sell(parts):
     if state.logged_in() and state.me() is None:
         me = state.call("get_me", quiet=True)
         state.set_me(None if me is state.FAIL else me)
+    osm_ref = "/".join(parts[3:5]) if arg == "new" and len(parts) >= 5 and parts[2] == "osm" else None
+    if osm_ref and not state.logged_in():
+        state.stored("claim", osm_ref)  # resumed after sign-in (Pages/Sell)
     if state.logged_in() and arg == "new":
         from .Pages.Onboard import Onboard
+        if osm_ref:
+            state.stored("claim", "")
+            return Onboard, {"first": not state.my_places(), "osm_ref": osm_ref}, "sell", "", "Claim your place · MonShop"
         return Onboard, {"first": False}, "sell", "", "Open your place · MonShop"
+    if state.logged_in() and arg and len(parts) > 2 and parts[2] == "poster":
+        from .Pages.Poster import Poster
+        return Poster, {"place_id": arg}, "sell", "", "Window poster · MonShop"
     if state.logged_in() and arg and len(parts) > 2 and parts[2] == "settings":
         from .Pages.ShopSettings import ShopSettings
         return ShopSettings, {"place_id": arg}, "sell", "", "Shop details · MonShop"
@@ -75,7 +87,8 @@ def _sell(parts):
         from .Pages.Onboard import Onboard
         return Onboard, {"first": True}, "sell", "", "Open your place · MonShop"
     from .Pages.Sell import Sell
-    return Sell, {"place_id": arg if state.logged_in() else None}, "sell", "", "My shop · MonShop"
+    kwargs = {"place_id": arg if state.logged_in() and arg != "new" else None, "claim": osm_ref}
+    return Sell, kwargs, "sell", "", "My shop · MonShop"
 
 
 def show():

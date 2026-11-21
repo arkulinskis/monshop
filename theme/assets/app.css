@@ -939,3 +939,152 @@ anvil-dropzone { display: contents; }
 .ms-empty h2 { font-size: 21px; margin-bottom: 6px; }
 .lp-step h2 { font-size: 21px; }
 .sk-council .card-h { margin: 6px 0 4px; }
+
+/* =====================================================================
+   2026-11-20: Open now, Not on MonShop yet (OpenStreetMap ghosts), shop web page + window poster
+   ===================================================================== */
+
+/* open / closing soon / closed pills (fmt.open_pill) */
+.ms-oc { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 2px 10px 2px 8px; font-size: 12.5px; font-weight: 800; white-space: nowrap; background: var(--bg-2); color: var(--ink-2); }
+.ms-oc::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.ms-oc.open { background: #DDF5E8; color: #13784A; }
+.ms-oc.soon { background: var(--sun-l); color: #7A5200; }
+.ms-oc.closed { background: #EFEAF2; color: #4B4560; }
+.ms-oc.big { font-size: 14px; padding: 4px 12px 4px 10px; }
+.mp-oc { margin-top: 5px; }
+.pop-oc { margin: 6px 0 2px; }
+.sp-pills .ms-oc { margin-left: 2px; }
+.ms-pin.closed { filter: saturate(.25) brightness(1.05); opacity: .78; }
+.ms-pin.closed.dim { opacity: .3; }
+
+/* ghost pins: places not on MonShop yet */
+.ms-pin.ghost { width: 30px; height: 30px; background: rgba(255, 255, 255, .92); border: 2px dashed #8C86A0; box-shadow: 0 2px 6px rgba(33, 28, 51, .18); }
+.ms-pin.ghost > span.e { font-size: 14px; opacity: .55; filter: grayscale(.7); }
+.ms-pin.ghost.wished { border: 2px solid var(--tomato); }
+.ms-pin.ghost.wished > span.e { opacity: .9; filter: none; }
+.ms-pin .badge.wish { top: -11px; right: -16px; background: #fff; color: var(--ink); font-size: 11px; padding: 0 4px; }
+.anvil-role-ms-chip.anvil-role-gh-chip > button { border-style: dashed; }
+.anvil-role-ms-chip.anvil-role-gh-chip.anvil-role-on > button { background: #4B4560; border-color: #4B4560; border-style: solid; }
+.gh-sec { margin: 14px 0 6px; }
+.gh-box { background: #fff; border: 1.5px dashed var(--line-2); border-radius: 18px; }
+.gh-box > summary { list-style: none; cursor: pointer; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; border-radius: 18px; }
+.gh-box > summary::-webkit-details-marker { display: none; }
+.gh-box > summary:hover { background: var(--bg); }
+.gh-box > summary:focus-visible { outline-offset: -3px; }
+.gh-sum { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+.gh-sum::after { content: "▾"; margin-left: auto; color: var(--ink-3); transition: transform var(--dur-fast) var(--ease-out); }
+.gh-box[open] .gh-sum::after { transform: rotate(180deg); }
+.gh-sub { font-size: 13px; color: var(--ink-2); }
+.gh-more { font-size: 12.5px; color: var(--ink-3); padding: 0 16px 12px; }
+.gh-more:empty { display: none; }
+.anvil-role-gh-list > div { display: flex; flex-direction: column; gap: 2px; padding: 0 8px 8px; }
+.osm-attr { font-size: 11.5px; color: var(--ink-3); margin-top: 6px; }
+.osm-attr a { color: inherit; }
+.anvil-role-gh-hint { background: #F3F0F7; color: #4B4560; border-radius: 14px; padding: 10px 12px; font-size: 14px; font-weight: 600; margin: 4px 0 12px; }
+.gc { display: flex; gap: 12px; padding: 12px; border-radius: 14px; }
+.gc:hover { background: var(--bg); }
+.gc-e { width: 48px; height: 48px; border-radius: 14px; border: 2px dashed #B8B2C8; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; filter: grayscale(.4); }
+.gc-name { font-size: 15.5px; display: block; }
+.gc-meta { font-size: 13px; color: var(--ink-2); }
+.gc-wishes { font-size: 13px; color: var(--tomato-d); font-weight: 700; margin-top: 2px; }
+.gc-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 8px; }
+.ms-btn.gh-wish, .anvil-role-ms-btn.anvil-role-gc-wish > button { background: #fff; color: var(--tomato-d); box-shadow: inset 0 0 0 1.5px var(--tomato); }
+.ms-btn.gh-wish.on, .anvil-role-ms-btn.anvil-role-gc-wish.anvil-role-on > button { background: var(--tomato-l); }
+.gh-pop .bd { padding-top: 14px; }
+.gh-tag { font-size: 12px; font-weight: 800; color: #4B4560; margin-bottom: 4px; }
+.gh-hours { margin-top: 6px; color: var(--ink-2); }
+.gh-wishes { margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--tomato-d); }
+.pop-acts.col { display: flex; flex-direction: column; gap: 6px; }
+.pop-acts.col .ms-btn { width: 100%; justify-content: center; }
+
+/* shop page: the week's hours */
+.sp-week { border-collapse: collapse; width: 100%; font-size: 14.5px; margin-top: 2px; }
+.sp-week td { padding: 2px 0; }
+.sp-week td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.sp-week tr.today td { font-weight: 800; color: var(--ink); }
+.sp-week tr.note td { text-align: left; color: var(--tomato-d); font-weight: 700; padding-top: 6px; }
+
+/* dashboard: Today + Spread the word */
+.sk-today-now { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 2px 0 10px; }
+.sk-today-acts { flex-wrap: wrap; gap: 8px; }
+.sk-until { margin-top: 10px; gap: 8px; flex-wrap: wrap; align-items: center; }
+.sk-until-l { font-weight: 700; font-size: 14px; }
+.ms-time { font: 600 16px var(--body); color: var(--ink); border: 0; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1.5px var(--line-2); padding: 8px 10px; min-height: 40px; }
+.ms-time:focus { box-shadow: inset 0 0 0 2px var(--ink); outline: none; }
+.sk-today-hint { margin: 10px 0 4px; }
+.sk-hours-link { color: var(--teal-d); font-weight: 700; display: inline-block; margin-top: 4px; }
+.sk-spread .card-h { margin-bottom: 4px; }
+.sk-link { display: block; font-weight: 800; color: var(--teal-d); word-break: break-all; margin: 8px 0 10px; }
+.sk-spread-acts { flex-wrap: wrap; gap: 8px; }
+.sk-spread-stats { margin-top: 10px; color: var(--ink-2); font-weight: 600; }
+.anvil-role-claim-note { background: var(--teal-l); color: var(--teal-d); border-radius: 14px; padding: 10px 14px; font-weight: 600; margin: 10px 0; }
+
+/* onboarding: claiming a place from OpenStreetMap */
+.ob-claim { display: flex; gap: 12px; align-items: flex-start; background: var(--teal-l); border-radius: 18px; padding: 14px 16px; margin-bottom: 16px; }
+.ob-claim-e { font-size: 28px; line-height: 1; }
+
+/* weekly hours editor (Shop details) */
+.he-help { margin: 0 0 10px; }
+.hr-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.hr-day { font-weight: 800; }
+.hr-times { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
+.hr-pair { display: inline-flex; align-items: center; gap: 4px; }
+.hr-pair .ms-time { padding: 6px 6px; min-height: 38px; font-size: 15px; max-width: 118px; }
+.hr-dash, .hr-and { color: var(--ink-3); font-weight: 700; }
+.hr-and { margin-right: 4px; font-size: 13px; }
+.hr-add { border: 0; background: none; color: var(--teal-d); font: 700 13px var(--body); cursor: pointer; padding: 6px 4px; min-height: 32px; }
+.hr-off { color: var(--ink-3); font-weight: 600; font-size: 14px; }
+.hr-closed { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--ink-2); cursor: pointer; min-height: 32px; }
+.hr-closed input { width: 18px; height: 18px; }
+.hr-row.is-closed .hr-day { color: var(--ink-3); }
+.he-acts { margin-top: 10px; gap: 12px; flex-wrap: wrap; align-items: center; }
+@media (max-width: 480px) {
+  .hr-row { grid-template-columns: 40px minmax(0, 1fr); }
+  .hr-closed { grid-column: 2; }
+  .hr-pair .ms-time { max-width: 104px; }
+}
+
+/* saved: places you asked for that joined */
+.sv-joined { background: var(--sun-l); border-radius: 20px; padding: 14px 16px; margin-bottom: 16px; }
+.sv-joined-h { font-size: 18px; margin: 0 0 8px; font-family: var(--body); font-weight: 800; }
+.sv-joined-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: #fff; border-radius: 14px; text-decoration: none !important; color: inherit !important; margin-top: 8px; transition: transform var(--dur-press) var(--ease-out); }
+.sv-joined-row:active { transform: scale(.98); }
+.sv-joined-row .e { font-size: 26px; }
+.sv-joined-row .grow { display: flex; flex-direction: column; }
+.sv-joined-sub { color: var(--ink-2); }
+.sv-joined-row .go { font-weight: 800; color: var(--tomato-d); white-space: nowrap; }
+
+/* admin: wishes */
+.anvil-role-wr-list > div { display: flex; flex-direction: column; gap: 10px; }
+.wr-row { display: flex; gap: 14px; align-items: center; }
+.wr-n { font-weight: 900; font-size: 18px; min-width: 64px; text-align: center; background: var(--tomato-l); color: var(--tomato-d); border-radius: 14px; padding: 8px 6px; }
+@media (max-width: 600px) { .wr-row { flex-wrap: wrap; } }
+
+/* window poster (Pages/Poster): the sheet is drawn at A4/A5/Letter proportions and prints alone */
+.po-bar { max-width: 640px; }
+.po-help { margin: 0 0 12px; }
+.po-acts { display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px; }
+.po-wrap { display: flex; justify-content: center; padding: 6px 0 30px; }
+.po-sheet { --po-accent: var(--tomato); position: relative; width: min(100%, 520px); aspect-ratio: 210 / 297; background: #FFF8EF; border-radius: 8px; box-shadow: var(--shadow-2); overflow: hidden; display: flex; flex-direction: column; color: var(--ink); }
+.po-sheet.size-letter { aspect-ratio: 216 / 279; }
+.po-sheet.food { --po-accent: var(--teal); }
+.po-awning { height: 7%; background: repeating-linear-gradient(90deg, var(--po-accent) 0 8.33%, #FFF8EF 8.33% 16.66%); border-bottom: 4px solid var(--po-accent); }
+.po-in { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; text-align: center; padding: 3% 8% 4%; }
+.po-emo { font-size: clamp(36px, 9vw, 60px); line-height: 1; }
+.po-name { font-size: clamp(24px, 6.4vw, 44px); line-height: 1.05; overflow-wrap: anywhere; }
+.po-line { font-size: clamp(15px, 3.4vw, 22px); font-weight: 600; color: var(--ink-2); line-height: 1.3; }
+.po-line b { color: var(--ink); font-weight: 900; font-size: 1.25em; }
+.po-qr { width: 58%; aspect-ratio: 1 / 1; background: #fff; border-radius: 16px; padding: 2%; box-shadow: 0 0 0 3px var(--ink); display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--ink-2); }
+.po-qr svg { width: 100%; height: 100%; display: block; }
+.po-scan { font-weight: 800; font-size: clamp(13px, 2.8vw, 18px); }
+.po-url { font-weight: 700; color: var(--ink-2); font-size: clamp(12px, 2.3vw, 15px); overflow-wrap: anywhere; }
+.po-brand { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.po-word { font-family: var(--head); font-weight: 800; font-size: 20px; }
+.po-tag { color: var(--ink-2); font-size: 12.5px; width: 100%; }
+@media print {
+  body * { visibility: hidden !important; }
+  .po-sheet, .po-sheet * { visibility: visible !important; }
+  .po-sheet { position: fixed; inset: 0; width: 100% !important; height: 100% !important; aspect-ratio: auto; border-radius: 0; box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .po-name { font-size: 54pt; } .po-line { font-size: 22pt; } .po-scan { font-size: 18pt; } .po-url { font-size: 14pt; } .po-emo { font-size: 64pt; }
+  .po-sheet.size-A5 .po-name { font-size: 36pt; } .po-sheet.size-A5 .po-line { font-size: 15pt; } .po-sheet.size-A5 .po-scan { font-size: 13pt; }
+}

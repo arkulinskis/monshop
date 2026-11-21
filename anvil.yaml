@@ -1,36 +1,5 @@
 allow_embedding: false
 db_schema:
-  error_log:
-    client: none
-    columns:
-    - admin_ui: {order: 0, width: 200}
-      name: when
-      type: datetime
-    - admin_ui: {order: 1, width: 120}
-      name: source
-      type: string
-    - admin_ui: {order: 2, width: 160}
-      name: kind
-      type: string
-    - admin_ui: {order: 3, width: 300}
-      name: message
-      type: string
-    - admin_ui: {order: 4, width: 300}
-      name: traceback
-      type: string
-    - admin_ui: {order: 5, width: 200}
-      name: page
-      type: string
-    - admin_ui: {order: 6, width: 120}
-      name: session
-      type: string
-    - admin_ui: {order: 7, width: 200}
-      name: user
-      target: users
-      type: link_single
-    indexes: []
-    server: full
-    title: Error log
   bookmarks:
     client: none
     columns:
@@ -64,6 +33,53 @@ db_schema:
     indexes: []
     server: full
     title: Bookmarks
+  error_log:
+    client: none
+    columns:
+    - admin_ui:
+        order: 0
+        width: 200
+      name: when
+      type: datetime
+    - admin_ui:
+        order: 1
+        width: 120
+      name: source
+      type: string
+    - admin_ui:
+        order: 2
+        width: 160
+      name: kind
+      type: string
+    - admin_ui:
+        order: 3
+        width: 300
+      name: message
+      type: string
+    - admin_ui:
+        order: 4
+        width: 300
+      name: traceback
+      type: string
+    - admin_ui:
+        order: 5
+        width: 200
+      name: page
+      type: string
+    - admin_ui:
+        order: 6
+        width: 120
+      name: session
+      type: string
+    - admin_ui:
+        order: 7
+        width: 200
+      name: user
+      target: users
+      type: link_single
+    indexes: []
+    server: full
+    title: Error log
   idea_votes:
     client: none
     columns:
@@ -232,6 +248,64 @@ db_schema:
     indexes: []
     server: full
     title: Items
+  osm_cache:
+    client: none
+    columns:
+    - admin_ui:
+        order: 0
+        width: 200
+      name: cell
+      type: string
+    - admin_ui:
+        order: 1
+        width: 200
+      name: fetched
+      type: datetime
+    - admin_ui:
+        order: 2
+        width: 200
+      name: src
+      type: string
+    - admin_ui:
+        order: 3
+        width: 200
+      name: places
+      type: simpleObject
+    - admin_ui:
+        order: 4
+        width: 200
+      name: refs
+      type: string
+    indexes: []
+    server: full
+    title: OSM cache
+  page_hits:
+    client: none
+    columns:
+    - admin_ui:
+        order: 0
+        width: 200
+      name: place
+      target: places
+      type: link_single
+    - admin_ui:
+        order: 1
+        width: 200
+      name: day
+      type: string
+    - admin_ui:
+        order: 2
+        width: 200
+      name: src
+      type: string
+    - admin_ui:
+        order: 3
+        width: 200
+      name: n
+      type: number
+    indexes: []
+    server: full
+    title: Page hits
   places:
     client: none
     columns:
@@ -387,6 +461,26 @@ db_schema:
         width: 200
       name: is_demo
       type: bool
+    - admin_ui:
+        order: 30
+        width: 200
+      name: osm_ref
+      type: string
+    - admin_ui:
+        order: 31
+        width: 200
+      name: hours_week
+      type: simpleObject
+    - admin_ui:
+        order: 32
+        width: 200
+      name: hours_today
+      type: simpleObject
+    - admin_ui:
+        order: 33
+        width: 200
+      name: tz
+      type: string
     indexes: []
     server: full
     title: Places
@@ -563,16 +657,64 @@ db_schema:
     indexes: []
     server: full
     title: Visits
+  wishes:
+    client: none
+    columns:
+    - admin_ui:
+        order: 0
+        width: 200
+      name: osm_ref
+      type: string
+    - admin_ui:
+        order: 1
+        width: 200
+      name: name
+      type: string
+    - admin_ui:
+        order: 2
+        width: 200
+      name: category
+      type: string
+    - admin_ui:
+        order: 3
+        width: 200
+      name: address
+      type: string
+    - admin_ui:
+        order: 4
+        width: 200
+      name: lat
+      type: number
+    - admin_ui:
+        order: 5
+        width: 200
+      name: lng
+      type: number
+    - admin_ui:
+        order: 6
+        width: 200
+      name: user
+      target: users
+      type: link_single
+    - admin_ui:
+        order: 7
+        width: 200
+      name: created
+      type: datetime
+    indexes: []
+    server: full
+    title: Wishes
 metadata:
-  description: "See what independent shops, cafés and restaurants near you have today, from real shelf photos and specials, and get 5% off where you are a regular."
-  logo_img: "asset:favicon.png"
-  title: "MonShop: the independent shops on your street, open"
+  description: See what independent shops, cafés and restaurants near you have today, from real shelf photos and specials,
+    and get 5% off where you are a regular.
+  logo_img: asset:favicon.png
+  title: 'MonShop: the independent shops on your street, open'
 name: MonShop
 native_deps:
   head_html: |-
     <!-- Prepsto feedback panel (the only feedback channel): every Submit feedback link (data-prepsto-open) opens it -->
     <script src="https://prepsto.com/_/theme/widget.js" data-prepsto="n3hxrpp" data-button="false" data-label="Submit feedback" async></script>
-    <script src="_/theme/legal-kit.js?v=1d6f798526"></script>
+    <script src="_/theme/legal-kit.js?v=2dabb03e0d"></script>
     <!-- seo:start (APP_MAKER/seo: edit seo/apps/monshop.json and run seo.py, not here) -->
     <link rel="canonical" href="https://monshop.ca/">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -617,9 +759,9 @@ native_deps:
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
     <link rel="stylesheet" href="_/theme/icons.css?v=8f508d76cd">
-    <link rel="stylesheet" href="_/theme/app.css?v=b19b9d39f0">
+    <link rel="stylesheet" href="_/theme/app.css?v=b77592c220">
     <script src="_/theme/app-kit.js?v=b682771c03"></script>
-    <script src="_/theme/monshop.js?v=090a027f49"></script>
+    <script src="_/theme/monshop.js?v=908d2a7783"></script>
 package_name: MonShop
 runtime_options:
   client_version: '3'

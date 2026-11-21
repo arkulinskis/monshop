@@ -4,7 +4,7 @@ from ._anvil_designer import AdminTemplate
 from ... import state
 
 TABS = [("queue", "⏳ Approvals"), ("places", "🏪 All places"), ("reports", "🚩 Reports"), ("council", "🗳️ Council"),
-        ("demo", "🧪 Demo data")]
+        ("wishes", "🙋 Wishes"), ("demo", "🧪 Demo data")]
 STATUS_FILTERS = [("", "All"), ("approved", "Live"), ("pending", "Pending"), ("rejected", "Rejected"),
                   ("suspended", "Suspended")]
 REVIEW_TOAST = {"approve": "✓ Approved: it's on the map.", "reinstate": "✓ Back on the map.", "reject": "Rejected.",
@@ -13,7 +13,8 @@ REVIEW_TOAST = {"approve": "✓ Approved: it's on the map.", "reinstate": "✓ B
 
 class Admin(AdminTemplate):
     """#admin: auto-approve switches (shops and restaurants separately), the approval queue, every place (search +
-    status filter: suspend / reinstate), reported posts, Council replies and statuses, and the demo street."""
+    status filter: suspend / reinstate), reported posts, Council replies and statuses, wishes for places not on
+    MonShop yet (most wished first, with a copyable invite), and the demo street."""
 
     def __init__(self, **properties):
         super().__init__(**properties)
@@ -109,10 +110,10 @@ class Admin(AdminTemplate):
         self.tabs_panel.items = [{"key": k, "label": (t + (" (%d)" % pending if k == "queue" and pending else "")),
                                   "on": k == key} for k, t in TABS]
         for k, part in (("queue", self.queue_tab), ("places", self.places_tab), ("reports", self.reports_tab),
-                        ("council", self.council_tab), ("demo", self.demo_tab)):
+                        ("council", self.council_tab), ("wishes", self.wishes_tab), ("demo", self.demo_tab)):
             part.visible = k == key
         {"queue": self.render_queue, "places": self.render_places, "reports": self.render_reports,
-         "council": self.render_council, "demo": self.render_demo}[key]()
+         "council": self.render_council, "wishes": self.render_wishes, "demo": self.render_demo}[key]()
 
     # ------------------------------------------------------------ approval queue
     def render_queue(self):
@@ -216,6 +217,18 @@ class Admin(AdminTemplate):
         if state.ask("Delete this idea and its votes?", yes="Delete"):
             if state.call("delete_idea", iid) is not state.FAIL:
                 self.render_council()
+
+    # ------------------------------------------------------------ wishes (Not on MonShop yet)
+    def render_wishes(self):
+        res = state.call("admin_wishes")
+        if res is state.FAIL:
+            return
+        self.wishes_panel.items = res
+        self.wishes_empty.visible = not res
+        total = sum(w.get("count") or 0 for w in res)
+        self.wishes_count.text = ("%d places, %d wishes. Most wished first: copy the invite and walk in with it."
+                                  % (len(res), total)) if res else ""
+        self.wishes_count.visible = bool(res)
 
     # ------------------------------------------------------------ demo data
     def render_demo(self):

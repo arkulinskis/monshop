@@ -2,6 +2,12 @@
   <anvil-block slot="content">
     <div class="ms-page narrow">
       <div class="ob-steps" aria-hidden="true"><i class="on"></i><i anvil:name="step2_bar"></i><i></i></div>
+      <div class="ob-claim" anvil:name="claim_box">
+        <span class="ob-claim-e" aria-hidden="true">🏪</span>
+        <div><anvil-component type="Label" name="claim_title" prop:role='["strong"]'></anvil-component>
+          <anvil-component type="Label" name="claim_text" prop:role='["small-muted"]' prop:text="We filled in what OpenStreetMap knows about your place. Check it, change anything, then open your shop."></anvil-component>
+          <div class="osm-attr">Details from &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</div></div>
+      </div>
       <div anvil:name="step1">
         <anvil-component type="Label" name="step1_title" prop:role='["page-h1"]' prop:text="What are you?"></anvil-component>
         <anvil-component type="Label" name="step1_lead" prop:role='["lead-teal"]'></anvil-component>
@@ -16,7 +22,7 @@
         <h1 class="page-h1">Almost there: where's your front door?</h1>
         <p class="muted">Shoppers see you on the map from here. You can change it later.</p>
         <anvil-component type="MonShop.Components.AddressPicker" name="address"></anvil-component>
-        <details class="mt ob-more"><summary>＋ Opening hours &amp; phone (optional)</summary>
+        <details class="mt ob-more" anvil:dom-node="more"><summary>＋ Opening hours &amp; phone (optional)</summary>
           <div class="mt">
             <label class="ms-field"><span class="lbl">Opening hours</span>
               <anvil-component type="TextBox" name="hours_box" prop:placeholder="e.g. Mon–Sat 9:00–18:00" prop:role='["ms-input"]'></anvil-component></label>

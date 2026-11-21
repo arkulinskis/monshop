@@ -1,0 +1,40 @@
+<anvil-form layout="MonShop.Layouts.Shell">
+  <anvil-block slot="content">
+    <div class="ms-page po-page">
+      <div class="ms-empty" anvil:name="loading_box"><span class="big" aria-hidden="true">🖨️</span><p>Warming up the printing press…</p></div>
+      <div class="ms-empty" anvil:name="locked_box"><span class="big" aria-hidden="true">🔒</span><h2>We couldn't open that shop</h2>
+        <p class="muted">It may belong to someone else, or it was closed.</p><a class="ms-btn teal" href="#sell">Back to my shop</a></div>
+      <div anvil:name="body">
+        <div class="po-bar">
+          <a class="back-link" anvil:name="back_link">← Back to my shop</a>
+          <h1 class="page-h1">Your window poster</h1>
+          <p class="muted po-help">Print it and tape it to your door or next to the till. Every scan opens your own MonShop
+            page, where people bookmark you for 5% off. Your dashboard counts the scans each week.</p>
+          <anvil-component type="Label" name="pending_note" prop:role='["claim-note"]' prop:visible="false" prop:text="⏳ Your shop is waiting for approval: the QR code works as soon as you're approved."></anvil-component>
+          <div class="po-acts">
+            <anvil-component type="RepeatingPanel" name="size_panel" prop:item_template="MonShop.Items.Chip" prop:role='["ms-chips"]'></anvil-component>
+            <div class="row">
+              <anvil-component type="Button" name="print_button" prop:text="🖨️ Print" prop:role='["ms-btn", "teal"]'></anvil-component>
+              <anvil-component type="Button" name="png_button" prop:text="📱 Picture for stories (PNG)" prop:role='["ms-btn", "ghost"]'></anvil-component>
+            </div>
+          </div>
+        </div>
+        <div class="po-wrap">
+          <div class="po-sheet" anvil:dom-node="sheet">
+            <div class="po-awning" aria-hidden="true"></div>
+            <div class="po-in">
+              <div class="po-emo" anvil:dom-node="emo" aria-hidden="true"></div>
+              <div class="po-name nm" anvil:dom-node="name"></div>
+              <div class="po-line">Bookmark us on MonShop:<br><b>5% off every visit</b></div>
+              <div class="po-qr" anvil:dom-node="qr"></div>
+              <div class="po-scan">Point your phone camera here</div>
+              <div class="po-url" anvil:dom-node="url"></div>
+              <div class="po-brand"><img src="_/theme/logo.svg" alt="" width="36" height="36"><span class="po-word">MonShop</span>
+                <span class="po-tag">the independent shops on your street</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </anvil-block>
+</anvil-form>

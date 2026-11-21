@@ -105,7 +105,7 @@ assert denied("toggle_bookmark", first["id"]), "visitors must sign in to bookmar
 as_user(ana)
 r = call("toggle_bookmark", first["id"])
 assert r["saved"] is True
-saved = call("get_saved")
+saved = call("get_saved")["places"]
 assert [s["id"] for s in saved] == [first["id"]]
 p = call("get_pass", first["id"])
 assert p["discount"] == 5 and p["word"]["word"]

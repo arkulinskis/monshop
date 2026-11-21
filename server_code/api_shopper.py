@@ -6,7 +6,7 @@ import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
 
-from .common import (current_user, rid, by_id, clean, now, aware, place_dict, word_of_day, MEMBER_DISCOUNT)
+from .common import (current_user, rid, by_id, clean, now, aware, place_dict, word_of_day, col, MEMBER_DISCOUNT)
 
 
 def _approved_place(place_id):
@@ -33,19 +33,39 @@ def toggle_bookmark(place_id):
 
 
 @anvil.server.callable(require_user=True)
-def get_saved():
+def get_saved(tz=None):
+  """{places: bookmarked places, joined: places this person wished for (Not on MonShop yet) that have joined since,
+  and that they haven't bookmarked yet}."""
   u = current_user()
-  out = []
+  out, saved_ids = [], set()
   for b in app_tables.bookmarks.search(tables.order_by("created", ascending=False), user=u):
     p = b["place"]
     if p is None or p["status"] != "approved":
       continue
-    d = place_dict(p)
+    d = place_dict(p, tz=tz)
     d["saved_on"] = b["created"]
     d["passes"] = b["pass_count"] or 0
     d["n_items"] = len(app_tables.items.search(place=p, active=True))
     out.append(d)
-  return out
+    saved_ids.add(d["id"])
+  return {"places": out, "joined": _joined(u, saved_ids)}
+
+
+def _joined(u, saved_ids):
+  try:
+    refs = {w["osm_ref"]: w for w in app_tables.wishes.search(user=u) if w["osm_ref"]}
+    if not refs:
+      return []
+    joined = []
+    for p in app_tables.places.search(status="approved", osm_ref=q.any_of(*refs.keys())):
+      pid = rid(p)
+      if pid in saved_ids:
+        continue
+      joined.append({"id": pid, "name": p["name"], "emoji": p["emoji"] or "🛍️", "address": p["address"] or ""})
+    return joined
+  except Exception as e:  # wishes / osm_ref wait for the Schema Mismatch accept
+    print("joined:", e)
+    return []
 
 
 @anvil.server.callable(require_user=True)
